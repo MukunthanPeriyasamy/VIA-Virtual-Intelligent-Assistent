@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VIA - Virtual Intelligent Assistant</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      html {
+        scroll-behavior: smooth;
+        font-size: 15px;
+      }
+      body {
+        font-family: "Inter", sans-serif;
+      }
+      .service-card {
+        background: rgba(255, 255, 255, 0.05); /* White with transparency */
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1); /* Lighter border for contrast */
+        transition: border-color 0.3s ease-in-out, transform 0.3s ease-in-out;
+      }
+      .service-card:hover {
+        border-color: rgba(
+          255,
+          255,
+          255,
+          0.5
+        ); /* More visible border on hover */
+        transform: translateY(-4px);
+      }
+      .service-icon-bg {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(5px);
+      }
+    </style>
+  </head>
+  <body class="bg-black text-gray-200">
+    <!-- App Container -->
+    <div class="min-h-screen flex flex-col">
+      <!-- Header -->
+      <header
+        class="w-full bg-black/80 backdrop-blur-sm sticky top-0 z-50 border-b border-gray-900"
+      >
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="flex items-center justify-between h-16">
+            <div class="flex flex-col items-start group">
+              <!-- Professional VIA Logo --><svg
+                class="h-7 w-auto"
+                viewBox="0 0 90 32"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <title>VIA Logo</title>
+                <text
+                  font-family="'Inter', sans-serif"
+                  x="0"
+                  y="26"
+                  font-weight="700"
+                  font-size="32"
+                  fill="white"
+                >
+                  V
+                </text>
+                <text
+                  font-family="'Inter', sans-serif"
+                  x="22"
+                  y="26"
+                  font-weight="700"
+                  font-size="32"
+                  fill="white"
+                >
+                  I
+                </text>
+                <text
+                  font-family="'Inter', sans-serif"
+                  x="36"
+                  y="26"
+                  font-weight="700"
+                  font-size="32"
+                  fill="white"
+                >
+                  A
+                </text>
+                <circle
+                  cx="70"
+                  cy="16"
+                  r="6"
+                  class="text-white group-hover:text-gray-300 transition-colors"
+                  fill="currentColor"
+                ></circle>
+              </svg>
+              <span
+                class="text-xs text-gray-500 mt-1 ml-0.5 tracking-wide group-hover:text-gray-400 transition-colors"
+                >Virtual Intelligent Assistant</span
+              >
+            </div>
+            <div class="hidden md:flex items-center space-x-6">
+              <a
+                href="#services"
+                class="text-gray-300 hover:bg-gray-800 hover:text-white px-3 py-2 rounded-md text-base font-medium"
+                >Services</a
+              >
+              <a
+                href="#use-cases"
+                class="text-gray-300 hover:bg-gray-800 hover:text-white px-3 py-2 rounded-md text-base font-medium"
+                >Use Cases</a
+              >
+              <a
+                href="#"
+                class="text-base font-medium text-gray-300 hover:text-white"
+                >Log in</a
+              >
+              <a
+                href="#"
+                class="inline-flex items-center justify-center px-4 py-2 border border-transparent text-base font-medium rounded-md text-black bg-white hover:bg-gray-200"
+              >
+                Sign Up
+              </a>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Main Content -->
+      <main class="flex-grow">
+        <!-- Hero Section -->
+        <div class="pt-20 pb-12 sm:pt-28 sm:pb-16 text-center">
+          <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h1
+              class="text-4xl sm:text-5xl lg:text-6xl font-bold text-white tracking-tight"
+            >
+              Empower Your Workflow with Advanced AI
+            </h1>
+            <p class="mt-6 text-lg max-w-2xl mx-auto text-gray-300">
+              A suite of powerful, reliable, and easy-to-integrate AI services
+              designed for professional applications. From text analysis to
+              content generation, we provide the tools you need to innovate.
+            </p>
+            <div class="mt-10 flex justify-center">
+              <a
+                href="#services"
+                class="px-6 py-3 text-sm font-semibold rounded-md text-black bg-white hover:bg-gray-200"
+                >Explore Services</a
+              >
+            </div>
+          </div>
+        </div>
+
+        <!-- Services Section -->
+        <div id="services" class="pt-12 sm:pt-16 pb-20 sm:pb-24">
+          <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center">
+              <h2
+                class="text-3xl font-bold tracking-tight text-white sm:text-4xl"
+              >
+                A Tool for Every Task
+              </h2>
+              <p class="mt-4 text-lg text-gray-400">
+                Select an AI service below to get started.
+              </p>
+            </div>
+
+            <div
+              class="mt-16 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3"
+            >
+              <!-- Service Card 1: Summarization -->
+              <div class="service-card p-8 rounded-lg cursor-pointer">
+                <div class="flex items-center">
+                  <div class="p-3 rounded-md service-icon-bg">
+                    <svg
+                      class="h-6 w-6 text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke-width="1.5"
+                      stroke="currentColor"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25H12"
+                      />
+                    </svg>
+                  </div>
+                  <h3 class="ml-4 text-xl font-semibold text-white">
+                    Text Summarization
+                  </h3>
+                </div>
+                <p class="mt-4 text-gray-300">
+                  Condense long documents, articles, or reports into concise,
+                  easy-to-read summaries without losing key information.
+                </p>
+              </div>
+
+              <!-- Service Card 2: Grammar Correction -->
+              <div class="service-card p-8 rounded-lg cursor-pointer">
+                <div class="flex items-center">
+                  <div class="p-3 rounded-md service-icon-bg">
+                    <svg
+                      class="h-6 w-6 text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke-width="1.5"
+                      stroke="currentColor"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M4.5 12.75l6 6 9-13.5"
+                      />
+                    </svg>
+                  </div>
+                  <h3 class="ml-4 text-xl font-semibold text-white">
+                    Grammar Correction
+                  </h3>
+                </div>
+                <p class="mt-4 text-gray-300">
+                  Improve the clarity and professionalism of your writing by
+                  correcting grammatical errors, spelling, and punctuation.
+                </p>
+              </div>
+
+              <!-- Service Card 3: Translation -->
+              <div class="service-card p-8 rounded-lg cursor-pointer">
+                <div class="flex items-center">
+                  <div class="p-3 rounded-md service-icon-bg">
+                    <svg
+                      class="h-6 w-6 text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke-width="1.5"
+                      stroke="currentColor"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M10.5 21l5.25-11.25L21 21m-9-3h7.5M3 5.621a48.474 48.474 0 016-.371m0 0c1.12 0 2.233.038 3.334.114M9 5.25V3m3.334 2.364C13.18 7.061 14.1 8.25 15 9.75M9 8.25c0 2.25 1.5 4.5 3.375 4.5s3.375-2.25 3.375-4.5"
+                      />
+                    </svg>
+                  </div>
+                  <h3 class="ml-4 text-xl font-semibold text-white">
+                    Language Translation
+                  </h3>
+                </div>
+                <p class="mt-4 text-gray-300">
+                  Instantly translate text between dozens of languages with high
+                  accuracy, breaking down communication barriers.
+                </p>
+              </div>
+              <!-- Add more service cards as needed -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Use Cases Section -->
+        <div id="use-cases" class="py-20 sm:py-24">
+          <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto">
+              <h2
+                class="text-3xl font-bold tracking-tight text-white sm:text-4xl"
+              >
+                Practical Applications for VIA Tools
+              </h2>
+              <p class="mt-4 text-lg text-gray-400">
+                Discover how our AI-powered services can be applied across
+                various professional fields to enhance productivity, streamline
+                workflows, and drive innovation.
+              </p>
+            </div>
+
+            <div class="mt-16 max-w-5xl mx-auto space-y-16">
+              <!-- Use Case 1: Text Summarization -->
+              <div class="md:flex md:items-start">
+                <h3
+                  class="md:w-1/3 text-2xl font-semibold text-white flex-shrink-0 pr-12"
+                >
+                  Text Summarization
+                </h3>
+                <p
+                  class="md:w-2/3 mt-3 md:mt-0 text-gray-400 md:border-l md:border-gray-700 md:pl-12"
+                >
+                  Ideal for researchers, analysts, and students who need to
+                  quickly digest large volumes of text. Summarize academic
+                  papers, financial reports, legal documents, and news articles
+                  to grasp key insights in a fraction of the time. This helps in
+                  accelerating research and making informed decisions faster.
+                </p>
+              </div>
+
+              <!-- Use Case 2: Grammar Correction -->
+              <div class="md:flex md:items-start">
+                <h3
+                  class="md:w-1/3 text-2xl font-semibold text-white flex-shrink-0 pr-12"
+                >
+                  Grammar Correction
+                </h3>
+                <p
+                  class="md:w-2/3 mt-3 md:mt-0 text-gray-400 md:border-l md:border-gray-700 md:pl-12"
+                >
+                  Essential for professionals, marketers, and content creators.
+                  Ensure all your written communication—from emails and reports
+                  to marketing copy and blog posts—is polished, professional,
+                  and error-free. Maintain brand credibility and communicate
+                  with clarity and confidence.
+                </p>
+              </div>
+
+              <!-- Use Case 3: Language Translation -->
+              <div class="md:flex md:items-start">
+                <h3
+                  class="md:w-1/3 text-2xl font-semibold text-white flex-shrink-0 pr-12"
+                >
+                  Language Translation
+                </h3>
+                <p
+                  class="md:w-2/3 mt-3 md:mt-0 text-gray-400 md:border-l md:border-gray-700 md:pl-12"
+                >
+                  A critical tool for global businesses, customer support teams,
+                  and international collaborators. Translate internal documents,
+                  customer inquiries, and marketing materials to overcome
+                  language barriers. Facilitate smooth communication with
+                  international clients and team members, expanding your global
+                  reach.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <!-- Footer -->
+      <footer class="bg-black border-t border-gray-900">
+        <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+          <div class="text-center">
+            <p class="text-base text-gray-400">
+              &copy; 2025 VIA. All rights reserved.
+            </p>
+          </div>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>
