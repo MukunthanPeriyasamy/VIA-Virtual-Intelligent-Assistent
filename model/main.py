@@ -1,11 +1,11 @@
 from model import llm
-from system_prompts import grammer_model_system_prompt , summarization_model_system_prompt
+from system_prompts import grammar_model_system_prompt , summarization_model_system_prompt
 from langchain_core.prompts import ChatPromptTemplate
 
 
 # GRAMMER CORRECTION MODEL
 
-grammer_system_prompt = ChatPromptTemplate.from_template(grammer_model_system_prompt)
+grammer_system_prompt = ChatPromptTemplate.from_template(grammar_model_system_prompt)
 
 grammer_chain = grammer_system_prompt | llm
 
