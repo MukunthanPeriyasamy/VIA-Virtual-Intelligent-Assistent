@@ -1,5 +1,5 @@
 from model import llm
-from system_prompts import grammar_model_system_prompt , summarization_model_system_prompt
+from system_prompts import grammar_model_system_prompt , summarization_model_system_prompt , content_creation_model_system_prompt
 from langchain_core.prompts import ChatPromptTemplate
 
 
@@ -21,4 +21,13 @@ summarization_chain = summarizarion_system_prompt | llm
 
 def summarization_model(content: str) -> str:
     response = summarization_chain.invoke({"content": content})
+    return response.content
+
+
+# CONTENT CREATION MODEL
+
+content_creation_system_prompt = ChatPromptTemplate.from_template(content_creation_model_system_prompt)
+content_creation_chain = content_creation_system_prompt | llm
+def content_creation_model(content: str) -> str:
+    response = content_creation_chain.invoke({"input": content},temperature=0.7)
     return response.content
