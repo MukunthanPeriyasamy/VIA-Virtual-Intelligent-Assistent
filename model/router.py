@@ -2,7 +2,7 @@ from fastapi import FastAPI , Body
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from pathlib import Path
-from main import grammer_check_model , summarization_model , content_creation_model
+from main import grammer_check_model , summarization_model , content_creation_model , content_formatting_model
 
 app = FastAPI()
 
@@ -39,3 +39,9 @@ def summarize(request: str = Body()):
 def content_creation(request: str = Body()):
     content = content_creation_model(request)
     return {"content": content}
+
+# CONTENT FORMATTING ENDPOINT
+@app.post("/content_formatting")
+def content_formatting(request: str = Body()):
+    formatted_content = content_formatting_model(request)
+    return {"formatted_content": formatted_content}
