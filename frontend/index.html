@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale-1.0" />
     <title>VIA - Virtual Intelligent Assistant</title>
     <!-- Corrected Tailwind CSS CDN link -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -193,7 +193,7 @@
             </div>
 
             <div
-              class="mt-16 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3"
+              class="mt-16 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4"
             >
               <!-- Service Card 1: Summarization --><a
                 class="service-card p-8 rounded-lg cursor-pointer"
@@ -257,8 +257,10 @@
                 </p>
               </a>
 
-              <!-- Service Card 3: Content Creation -->
-              <div class="service-card p-8 rounded-lg cursor-pointer">
+              <!-- Service Card 3: Content Creation --><a
+                class="service-card p-8 rounded-lg cursor-pointer"
+                href="frontend/pages/content_creation.html"
+              >
                 <div class="flex items-center">
                   <div class="p-3 rounded-md service-icon-bg">
                     <svg
@@ -289,7 +291,37 @@
                   Generate high-quality articles, blog posts, marketing copy,
                   and other written content on any topic.
                 </p>
-              </div>
+              </a>
+              <!-- Service Card 4: Content Formatting --><a
+                class="service-card p-8 rounded-lg cursor-pointer"
+                href="frontend/pages/content_formatting.html"
+              >
+                <div class="flex items-center">
+                  <div class="p-3 rounded-md service-icon-bg">
+                    <svg
+                      class="h-6 w-6 text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke-width="1.5"
+                      stroke="currentColor"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
+                      />
+                    </svg>
+                  </div>
+                  <h3 class="ml-4 text-xl font-semibold text-white">
+                    Content Formatting
+                  </h3>
+                </div>
+                <p class="mt-4 text-gray-200">
+                  Automatically format your text to improve readability and
+                  visual appeal for any platform or document type.
+                </p>
+              </a>
             </div>
           </div>
         </div>
@@ -408,6 +440,36 @@
                   create engaging website content, social media posts, and email
                   newsletters to attract and retain your audience. Save time on
                   brainstorming and drafting.
+                </p>
+              </div>
+              <!-- Use Case 4: Content Formatting -->
+              <div class="md:flex md:items-start">
+                <h3
+                  class="md:w-1/3 text-2xl font-semibold text-white flex-shrink-0 pr-12 flex items-center"
+                >
+                  <svg
+                    class="h-6 w-6 text-white mr-3"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
+                    />
+                  </svg>
+                  Content Formatting
+                </h3>
+                <p
+                  class="md:w-2/3 mt-3 md:mt-0 text-gray-200 md:border-l md:border-gray-600 md:pl-12"
+                >
+                  Valuable for editors, web publishers, and corporate
+                  communicators. Automatically structure and style documents,
+                  reports, and web pages for a consistent, professional
+                  appearance, ensuring brand guidelines are met.
                 </p>
               </div>
             </div>
