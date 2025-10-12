@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Content Creation - VIA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+        overflow: hidden; /* Prevent body scroll */
+      }
+      .fade-in {
+        animation: fadeIn 1s ease-out forwards;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      #input-text::placeholder {
+        color: #9ca3af;
+      }
+
+      /* Animated Border Styles */
+      #input-container {
+        position: relative;
+        border-radius: 1.25rem; /* Tailwind's rounded-2xl */
+        overflow: hidden;
+        padding: 2px; /* This will be the border thickness */
+        background: #e5e7eb; /* Default border color (gray-200) */
+        box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05); /* shadow-sm */
+        transition: background 0.3s ease;
+      }
+
+      #input-container::before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 250%;
+        height: 250%;
+        background: conic-gradient(
+          from 180deg at 50% 50%,
+          #fd004c,
+          #fe9000,
+          #fff020,
+          #3edf4b,
+          #3363ff,
+          #b102b7,
+          #fd004c
+        );
+        animation: rotate 4s linear infinite;
+        opacity: 0;
+        transition: opacity 0.4s ease-in-out;
+        z-index: 1;
+      }
+
+      #input-container:hover::before,
+      #input-container.focused::before {
+        opacity: 1;
+      }
+
+      #input-container:hover,
+      #input-container.focused {
+        background: transparent;
+      }
+
+      @keyframes rotate {
+        to {
+          transform: translate(-50%, -50%) rotate(1turn);
+        }
+      }
+
+      .input-content-wrapper {
+        background: #fff;
+        border-radius: calc(1.25rem - 2px); /* Make it fit inside the border */
+        position: relative;
+        z-index: 2;
+        overflow: hidden;
+      }
+
+      /* New styles for layout transition */
+      #main-content,
+      #footer-input {
+        transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      .initial-view #main-content {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .initial-view #footer-input {
+        /* Removed absolute positioning to fix overlap */
+        position: static;
+        transform: none;
+        width: 100%;
+        max-width: 48rem; /* max-w-3xl */
+        background: transparent;
+        backdrop-filter: none;
+        border-top: none;
+        padding-top: 0;
+        margin-top: 2.5rem; /* Added margin for spacing */
+      }
+
+      .initial-view #output-section {
+        display: none; /* Hide the results card initially */
+      }
+
+      /* The welcome message containing the title is now always visible */
+      #welcome-message {
+        display: block;
+      }
+
+      /* Glassmorphism for the footer when it's active */
+      body:not(.initial-view) #footer-input {
+        background: rgba(255, 255, 255, 0.4);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border-top: 1px solid rgba(255, 255, 255, 0.2);
+      }
+
+      /* Modern Scrollbar */
+      #main-content::-webkit-scrollbar {
+        width: 8px;
+      }
+
+      #main-content::-webkit-scrollbar-track {
+        background: transparent;
+      }
+
+      #main-content::-webkit-scrollbar-thumb {
+        background: #d1d5db; /* gray-300 */
+        border-radius: 10px;
+      }
+
+      #main-content::-webkit-scrollbar-thumb:hover {
+        background: #9ca3af; /* gray-400 */
+      }
+    </style>
+  </head>
+  <body class="bg-gray-50 text-gray-800 flex flex-col h-screen initial-view">
+    <!-- Header -->
+    <header
+      class="w-full bg-white/80 backdrop-blur-sm sticky top-0 z-50 border-b border-gray-200 flex-shrink-0"
+    >
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16">
+          <div class="flex flex-col items-start group">
+            <div class="text-3xl font-bold tracking-tight text-black">VIA</div>
+            <div class="text-xs text-gray-500 tracking-wide">
+              Virtual Intelligent Assistant
+            </div>
+          </div>
+          <div class="hidden md:flex items-center space-x-6">
+            <a
+              href="#"
+              class="text-base font-medium text-gray-600 hover:text-black"
+              >Log in</a
+            >
+            <a
+              href="#"
+              class="inline-flex items-center justify-center px-4 py-2 border border-transparent text-base font-medium rounded-md text-white bg-black hover:bg-gray-800"
+            >
+              Sign Up
+            </a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content Area (for response) -->
+    <main
+      id="main-content"
+      class="flex-grow w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 overflow-y-auto"
+    >
+      <!-- Initial Welcome Message -->
+      <div id="welcome-message" class="fade-in text-center mb-8">
+        <h1 class="text-4xl sm:text-5xl font-bold text-gray-900 tracking-tight">
+          Content Creation Tool
+        </h1>
+        <p class="mt-4 text-lg text-gray-600">
+          Enter a topic or prompt below to generate original content.
+        </p>
+      </div>
+      <div id="output-section">
+        <!-- This will be populated with results -->
+      </div>
+    </main>
+
+    <!-- Input Section (Fixed at the bottom) -->
+    <footer id="footer-input" class="w-full p-4 flex-shrink-0">
+      <div class="max-w-3xl mx-auto">
+        <!-- The main input box wrapper for animation -->
+        <div id="input-container">
+          <div class="input-content-wrapper">
+            <textarea
+              id="input-text"
+              style="height: 80px"
+              class="w-full p-4 pr-16 border-none focus:ring-0 focus:outline-none resize-none text-lg text-gray-800 bg-transparent"
+              placeholder="Type a prompt for content creation..."
+            ></textarea>
+            <button
+              id="generate-btn"
+              class="absolute bottom-3 right-3 p-2 bg-black rounded-full text-white hover:bg-gray-800 transition-colors disabled:bg-gray-400 disabled:opacity-50"
+              title="Generate Content"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                stroke-width="2.5"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M5 15l7-7 7 7"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </footer>
+    <script>
+      function formatTextToHtml(text) {
+        let formattedText = text.replace(
+          /\*\*(.*?)\*\*/g,
+          "<strong>$1</strong>"
+        );
+        const lines = formattedText.split("\n");
+        let html = "";
+        let inList = false;
+
+        lines.forEach((line) => {
+          line = line.trim();
+          if (line.startsWith("* ")) {
+            if (!inList) {
+              html += '<ul class="list-disc list-inside space-y-2 my-4">';
+              inList = true;
+            }
+            html += `<li>${line.substring(2)}</li>`;
+          } else {
+            if (inList) {
+              html += "</ul>";
+              inList = false;
+            }
+            if (line) {
+              html += `<p class="mb-4">${line}</p>`;
+            }
+          }
+        });
+
+        if (inList) {
+          html += "</ul>";
+        }
+        return html;
+      }
+
+      function renderResponse(content, isHtml = false) {
+        const htmlContent = isHtml ? content : formatTextToHtml(content);
+        return `
+              <div class="bg-white border border-gray-200 rounded-lg shadow-sm p-6 relative fade-in">
+                  <div id="generated-text-content">${htmlContent}</div>
+                  <div class="flex justify-end mt-4">
+                      <button id="copy-btn" class="inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-md text-gray-700 bg-gray-100 hover:bg-gray-200 transition-colors">
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
+                          </svg>
+                          <span>Copy</span>
+                      </button>
+                  </div>
+              </div>
+          `;
+      }
+
+      function setupCopyButtonListener() {
+        const copyBtn = document.getElementById("copy-btn");
+        if (copyBtn) {
+          copyBtn.addEventListener("click", () => {
+            const textToCopy = document.getElementById(
+              "generated-text-content"
+            ).innerText;
+            navigator.clipboard
+              .writeText(textToCopy)
+              .then(() => {
+                const buttonText = copyBtn.querySelector("span");
+                const originalText = buttonText.textContent;
+                const originalIcon = copyBtn.querySelector("svg").outerHTML;
+
+                buttonText.textContent = "Copied!";
+                copyBtn.querySelector("svg").outerHTML = `
+                          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                              <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
+                          </svg>
+                      `;
+
+                setTimeout(() => {
+                  buttonText.textContent = originalText;
+                  copyBtn.querySelector("svg").outerHTML = originalIcon;
+                }, 2000);
+              })
+              .catch((err) => {
+                console.error("Failed to copy text: ", err);
+              });
+          });
+        }
+      }
+
+      const generateBtn = document.getElementById("generate-btn");
+      const outputSection = document.getElementById("output-section");
+      const inputTextElement = document.getElementById("input-text");
+      const inputContainer = document.getElementById("input-container");
+      const welcomeMessage = document.getElementById("welcome-message");
+      const footerInput = document.getElementById("footer-input");
+
+      // Move the input to be part of the welcome message initially for centering.
+      welcomeMessage.appendChild(footerInput);
+
+      inputTextElement.addEventListener("focus", () => {
+        inputContainer.classList.add("focused");
+      });
+
+      inputTextElement.addEventListener("blur", () => {
+        inputContainer.classList.remove("focused");
+      });
+
+      generateBtn.addEventListener("click", async () => {
+        const inputText = inputTextElement.value;
+        const isInitial = document.body.classList.contains("initial-view");
+
+        if (inputText.trim() === "") {
+          if (!isInitial) {
+            outputSection.innerHTML = renderResponse(
+              '<p class="text-red-500">Please enter a topic or prompt.</p>',
+              true
+            );
+            setupCopyButtonListener();
+          }
+          return;
+        }
+
+        if (isInitial) {
+          document.body.classList.remove("initial-view");
+          // Move input back to the body to act as a footer
+          document.body.appendChild(footerInput);
+        }
+
+        generateBtn.disabled = true;
+        outputSection.innerHTML = renderResponse(
+          '<p class="text-gray-500 text-center">Processing...</p>',
+          true
+        );
+
+        try {
+          const apiUrl = "http://127.0.0.1:8000/content_creation";
+
+          const response = await fetch(apiUrl, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(inputText),
+          });
+
+          if (!response.ok) {
+            const errorBody = await response.text();
+            throw new Error(`API Error: ${response.status} - ${errorBody}`);
+          }
+
+          const result = await response.json();
+          const generatedContent = result.content;
+
+          if (generatedContent) {
+            outputSection.innerHTML = renderResponse(generatedContent);
+          } else {
+            outputSection.innerHTML = renderResponse(
+              '<p class="text-gray-500">Could not generate content. Please try again.</p>',
+              true
+            );
+          }
+        } catch (error) {
+          console.error(error);
+          outputSection.innerHTML = renderResponse(
+            `<p class="text-red-500">Error: Could not connect to your local AI server.<br>Please ensure it's running and CORS is enabled.</p>`,
+            true
+          );
+        } finally {
+          generateBtn.disabled = false;
+          setupCopyButtonListener();
+          outputSection.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      });
+    </script>
+  </body>
+</html>
