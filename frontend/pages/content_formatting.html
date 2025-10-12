@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Content Formatting - VIA</title>
+    <!-- Use the official Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+      }
+      .fade-in {
+        animation: fadeIn 0.8s ease-out forwards;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(15px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      /* Style for highlighted corrections */
+      .highlight {
+        background-color: rgba(
+          255,
+          229,
+          100,
+          0.5
+        ); /* A pleasant yellow highlight */
+        padding: 0.1em 0.2em;
+        border-radius: 4px;
+        font-weight: 500;
+      }
+      .default-text-style {
+        color: #9ca3af; /* Tailwind gray-400 */
+      }
+      /* Custom scrollbar for better aesthetics */
+      textarea,
+      #output-text {
+        scrollbar-width: thin;
+        scrollbar-color: #9ca3af #f3f4f6;
+      }
+      textarea::-webkit-scrollbar,
+      #output-text::-webkit-scrollbar {
+        width: 8px;
+      }
+      textarea::-webkit-scrollbar-track,
+      #output-text::-webkit-scrollbar-track {
+        background: #f3f4f6;
+        border-radius: 10px;
+      }
+      textarea::-webkit-scrollbar-thumb,
+      #output-text::-webkit-scrollbar-thumb {
+        background-color: #9ca3af;
+        border-radius: 10px;
+        border: 2px solid #f3f4f6;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-50 text-gray-800">
+    <div class="min-h-screen flex flex-col">
+      <!-- Header -->
+      <header
+        class="w-full bg-white/80 backdrop-blur-sm sticky top-0 z-50 border-b border-gray-200"
+      >
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="flex items-center justify-between h-16">
+            <div class="flex flex-col items-start group">
+              <div class="text-3xl font-bold tracking-tight text-black">
+                VIA
+              </div>
+              <div class="text-xs text-gray-500 tracking-wide">
+                Virtual Intelligent Assistant
+              </div>
+            </div>
+            <div class="flex items-center space-x-4">
+              <a
+                href="#"
+                class="text-base font-medium text-gray-600 hover:text-black transition-colors"
+                >Log in</a
+              >
+              <a
+                href="#"
+                class="inline-flex items-center justify-center px-4 py-2 border border-transparent text-base font-medium rounded-md text-white bg-black hover:bg-gray-800 transition-colors"
+              >
+                Sign Up
+              </a>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Main Content -->
+      <main
+        class="flex-grow w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16"
+      >
+        <div class="fade-in text-center">
+          <h1
+            class="text-4xl sm:text-5xl font-bold text-gray-900 tracking-tight"
+          >
+            Content Formatting Tool
+          </h1>
+          <p class="mt-4 text-lg text-gray-600 max-w-3xl mx-auto">
+            Paste your text below to transform it into a professional and
+            well-structured format.
+          </p>
+        </div>
+
+        <!-- Input and Output Section -->
+        <div
+          class="mt-12 bg-white border border-gray-200 rounded-lg shadow-sm p-6 sm:p-8 fade-in"
+          style="animation-delay: 0.2s"
+        >
+          <div class="grid md:grid-cols-2 md:gap-8">
+            <!-- Input Column -->
+            <div class="flex flex-col">
+              <label
+                for="input-text"
+                class="text-lg font-semibold text-gray-800"
+                >Raw Content</label
+              >
+              <div class="relative mt-4 flex-grow">
+                <textarea
+                  id="input-text"
+                  style="height: 400px"
+                  class="w-full p-4 pr-10 border border-gray-300 rounded-md focus:ring-2 focus:ring-black focus:border-black transition-shadow resize-none"
+                  placeholder="Enter or paste your unstructured text here..."
+                ></textarea>
+                <button
+                  id="clear-btn"
+                  class="absolute top-3 right-3 p-2 rounded-full hover:bg-gray-200 transition-colors group"
+                  title="Clear text"
+                  style="display: none"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-5 w-5 text-gray-500 group-hover:text-black"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M6 18L18 6M6 6l12 12"
+                    ></path>
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <!-- Output Column -->
+            <div
+              class="mt-8 md:mt-0 md:border-l md:border-gray-200 md:pl-8 flex flex-col"
+            >
+              <label
+                for="output-text"
+                class="text-lg font-semibold text-gray-800"
+                >Formatted Content</label
+              >
+              <div class="relative mt-4 flex-grow">
+                <div
+                  id="output-text"
+                  style="height: 400px"
+                  class="w-full p-4 pb-16 bg-gray-50/70 border border-gray-200 rounded-md whitespace-pre-wrap overflow-y-auto"
+                >
+                  <span class="text-gray-400"
+                    >Your formatted content will appear here...</span
+                  >
+                </div>
+                <button
+                  id="copy-btn"
+                  class="absolute bottom-3 right-3 p-2 rounded-full hover:bg-gray-200 transition-colors group"
+                  title="Copy to clipboard"
+                  style="display: none"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-5 w-5 text-gray-500 group-hover:text-black"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+                    ></path>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-8 flex justify-center">
+            <button
+              id="format-btn"
+              class="px-8 py-3 text-base font-semibold rounded-md text-white bg-black hover:bg-gray-800 transition-all transform hover:scale-105 disabled:bg-gray-400 disabled:scale-100 flex items-center space-x-2"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                id="btn-icon"
+                class="h-5 w-5"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+              >
+                <path
+                  d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z"
+                />
+                <path
+                  fill-rule="evenodd"
+                  d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+              <span>Format Content</span>
+            </button>
+          </div>
+        </div>
+      </main>
+    </div>
+    <script>
+      const defaultPassage =
+        `Welcome to our project kickoff. Here are the main points for today's discussion. First, we will review the project goals. The main goal is to launch the new marketing website by the end of Q3. Next, we'll go over the timeline. Key milestones include completing the design mockups by July 15th, finishing development by August 30th, and user acceptance testing in the first week of September. Then we will assign roles and responsibilities. John will be the project lead. Sarah will head the design team. Mike will be in charge of development. Finally, we'll open the floor for Q&A. Please have your questions ready. Our success depends on clear communication and meeting our deadlines.`.trim();
+
+      // DOM elements
+      const formatBtn = document.getElementById("format-btn");
+      const copyBtn = document.getElementById("copy-btn");
+      const clearBtn = document.getElementById("clear-btn");
+      const outputElement = document.getElementById("output-text");
+      const inputTextElement = document.getElementById("input-text");
+
+      // Set default example text
+      inputTextElement.value = defaultPassage;
+      inputTextElement.classList.add("default-text-style");
+
+      // Function to format the model's response text with highlights and lists
+      function formatText(text) {
+        let formattedText = text.replace(
+          /\*(.*?)\*/g,
+          '<strong class="highlight">$1</strong>'
+        );
+
+        const lines = formattedText.split("\n");
+        let html = "";
+        let inList = false;
+
+        lines.forEach((line) => {
+          if (line.trim().startsWith("* ")) {
+            if (!inList) {
+              html += '<ul class="list-disc list-inside space-y-1 my-2 pl-2">';
+              inList = true;
+            }
+            html += `<li>${line.substring(2).trim()}</li>`;
+          } else {
+            if (inList) {
+              html += "</ul>";
+              inList = false;
+            }
+            if (line.trim()) {
+              html += `<p class="mb-2">${line.trim()}</p>`;
+            }
+          }
+        });
+
+        if (inList) {
+          html += "</ul>";
+        }
+
+        return html;
+      }
+
+      // Function to call the Gemini API
+      async function formatContentWithGemini(text) {
+        const apiUrl = "http://127.0.0.1:8000/content_formatting";
+
+        try {
+          const response = await fetch(apiUrl, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(text),
+          });
+
+          if (!response.ok) {
+            throw new Error(
+              `API Error: ${response.status} ${response.statusText}`
+            );
+          }
+
+          const data = await response.json();
+
+          if (data.formatted_content) {
+            return data.formatted_content;
+          } else {
+            throw new Error("Invalid response structure from the server.");
+          }
+        } catch (error) {
+          console.error("Fetch error:", error);
+          throw new Error(
+            "Could not connect to the formatting server. Please ensure it's running."
+          );
+        }
+      }
+
+      // UI state management functions
+      function showLoadingState() {
+        formatBtn.disabled = true;
+        formatBtn.querySelector("span").textContent = "Formatting...";
+        const spinner = `<svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>`;
+        formatBtn.querySelector("#btn-icon").outerHTML = spinner;
+        outputElement.innerHTML =
+          '<span class="text-gray-500">Processing...</span>';
+        copyBtn.style.display = "none";
+      }
+
+      function resetIdleState() {
+        formatBtn.disabled = false;
+        formatBtn.querySelector("span").textContent = "Format Content";
+        const icon = `<svg xmlns="http://www.w3.org/2000/svg" id="btn-icon" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" /><path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd" /></svg>`;
+        const spinnerElement = formatBtn.querySelector("svg.animate-spin");
+        if (spinnerElement) spinnerElement.outerHTML = icon;
+      }
+
+      // Button visibility handlers
+      function handleClearButtonVisibility() {
+        clearBtn.style.display = inputTextElement.value.trim()
+          ? "block"
+          : "none";
+      }
+
+      function handleCopyButtonVisibility() {
+        const hasContent = outputElement.querySelector("p, strong, ul");
+        copyBtn.style.display = hasContent ? "block" : "none";
+      }
+
+      // Main event listener for the "Format Content" button
+      formatBtn.addEventListener("click", async () => {
+        const inputText = inputTextElement.value;
+
+        if (inputText.trim() === "") {
+          outputElement.innerHTML =
+            '<span class="text-red-500">Please enter some content to format.</span>';
+          return;
+        }
+
+        showLoadingState();
+
+        try {
+          const formattedContent = await formatContentWithGemini(inputText);
+          outputElement.innerHTML = formatText(formattedContent);
+        } catch (error) {
+          console.error(error);
+          outputElement.innerHTML = `<span class="text-red-500">Error: ${error.message}</span>`;
+        } finally {
+          resetIdleState();
+          handleCopyButtonVisibility();
+        }
+      });
+
+      // Event listener for the clear button
+      clearBtn.addEventListener("click", () => {
+        inputTextElement.value = "";
+        inputTextElement.classList.remove("default-text-style");
+        handleClearButtonVisibility();
+        inputTextElement.focus();
+      });
+
+      // Event listener for the copy button
+      copyBtn.addEventListener("click", () => {
+        const textToCopy = outputElement.innerText; // Use innerText to get clean text
+        const tempTextArea = document.createElement("textarea");
+        tempTextArea.value = textToCopy;
+        document.body.appendChild(tempTextArea);
+        tempTextArea.select();
+        // Use execCommand for iframe compatibility
+        try {
+          document.execCommand("copy");
+          const originalIcon = copyBtn.innerHTML;
+          copyBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg>`;
+          setTimeout(() => {
+            copyBtn.innerHTML = originalIcon;
+          }, 2000);
+        } catch (err) {
+          console.error("Failed to copy text: ", err);
+        }
+        document.body.removeChild(tempTextArea);
+      });
+
+      // Handle placeholder text style and button visibility
+      inputTextElement.addEventListener("focus", () => {
+        if (inputTextElement.value === defaultPassage) {
+          inputTextElement.value = "";
+          inputTextElement.classList.remove("default-text-style");
+        }
+      });
+
+      inputTextElement.addEventListener("blur", () => {
+        if (inputTextElement.value.trim() === "") {
+          inputTextElement.value = defaultPassage;
+          inputTextElement.classList.add("default-text-style");
+        }
+      });
+
+      // Live check for button visibility on input
+      inputTextElement.addEventListener("input", () => {
+        handleClearButtonVisibility();
+        // Also remove grey color class if user starts typing
+        if (inputTextElement.classList.contains("default-text-style")) {
+          inputTextElement.classList.remove("default-text-style");
+        }
+      });
+
+      // Initial visibility check on load
+      handleClearButtonVisibility();
+    </script>
+  </body>
+</html>
