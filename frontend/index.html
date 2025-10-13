@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale-1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>VIA - Virtual Intelligent Assistant</title>
     <!-- Corrected Tailwind CSS CDN link -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -39,7 +39,8 @@
         background: rgba(255, 255, 255, 0.05); /* White with transparency */
         backdrop-filter: blur(10px);
         border: 1px solid rgba(255, 255, 255, 0.1); /* Lighter border for contrast */
-        transition: border-color 0.3s ease-in-out, transform 0.3s ease-in-out;
+        transition: border-color 0.3s ease-in-out, transform 0.3s ease-in-out,
+          box-shadow 0.3s ease-in-out;
       }
       .service-card:hover {
         border-color: rgba(
@@ -49,6 +50,16 @@
           0.5
         ); /* More visible border on hover */
         transform: translateY(-4px);
+      }
+      .main-service-card {
+        background: rgba(167, 139, 250, 0.1); /* A subtle violet tint */
+        border: 1px solid rgba(139, 92, 246, 0.5);
+        box-shadow: 0 0 25px rgba(139, 92, 246, 0.2);
+      }
+      .main-service-card:hover {
+        border-color: rgba(139, 92, 246, 1);
+        transform: translateY(-5px) scale(1.02);
+        box-shadow: 0 0 35px rgba(139, 92, 246, 0.3);
       }
       .service-icon-bg {
         background: rgba(255, 255, 255, 0.1);
@@ -192,6 +203,46 @@
               </p>
             </div>
 
+            <div class="mt-16 max-w-3xl mx-auto">
+              <!-- Main Service Card: RAG Chat -->
+              <a
+                class="service-card main-service-card p-8 rounded-lg cursor-pointer block"
+                href="frontend/pages/rag-chat.html"
+              >
+                <div class="flex items-center">
+                  <div class="p-3 rounded-md service-icon-bg">
+                    <svg
+                      class="h-8 w-8 text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke-width="1.5"
+                      stroke="currentColor"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M2.25 12.76c0 1.6 1.123 2.994 2.707 3.227 1.087.16 2.185.283 3.293.369V21l4.076-4.076a1.526 1.526 0 011.037-.443 48.282 48.282 0 005.68-.494c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z"
+                      />
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M15.75 10.5l-2.063 2.063m0 0l-2.063-2.063m2.063 2.063V7.5"
+                      />
+                    </svg>
+                  </div>
+                  <h3 class="ml-4 text-2xl font-semibold text-white">
+                    RAG Chat
+                  </h3>
+                </div>
+                <p class="mt-4 text-gray-200 text-lg">
+                  Our flagship service. Engage in intelligent conversations with
+                  your documents and data. Get instant, accurate answers backed
+                  by your own knowledge base.
+                </p>
+              </a>
+            </div>
+
             <div
               class="mt-16 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4"
             >
@@ -222,7 +273,7 @@
                 </div>
                 <p class="mt-4 text-gray-200">
                   Condense long documents, articles, or reports into concise,
-                  easy-to-read summaries without losing key information.
+                  easy-to-read summaries.
                 </p>
               </a>
 
@@ -253,7 +304,7 @@
                 </div>
                 <p class="mt-4 text-gray-200">
                   Improve the clarity and professionalism of your writing by
-                  correcting grammatical errors, spelling, and punctuation.
+                  correcting errors.
                 </p>
               </a>
 
@@ -288,8 +339,8 @@
                   </h3>
                 </div>
                 <p class="mt-4 text-gray-200">
-                  Generate high-quality articles, blog posts, marketing copy,
-                  and other written content on any topic.
+                  Generate high-quality articles, blog posts, and marketing copy
+                  on any topic.
                 </p>
               </a>
               <!-- Service Card 4: Content Formatting --><a
@@ -319,7 +370,7 @@
                 </div>
                 <p class="mt-4 text-gray-200">
                   Automatically format your text to improve readability and
-                  visual appeal for any platform or document type.
+                  visual appeal.
                 </p>
               </a>
             </div>
@@ -343,7 +394,42 @@
             </div>
 
             <div class="mt-16 max-w-5xl mx-auto space-y-16">
-              <!-- Use Case 1: Text Summarization -->
+              <!-- Use Case 1: RAG Chat -->
+              <div class="md:flex md:items-start">
+                <h3
+                  class="md:w-1/3 text-2xl font-semibold text-white flex-shrink-0 pr-12 flex items-center"
+                >
+                  <svg
+                    class="h-6 w-6 text-white mr-3"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M2.25 12.76c0 1.6 1.123 2.994 2.707 3.227 1.087.16 2.185.283 3.293.369V21l4.076-4.076a1.526 1.526 0 011.037-.443 48.282 48.282 0 005.68-.494c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z"
+                    />
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M15.75 10.5l-2.063 2.063m0 0l-2.063-2.063m2.063 2.063V7.5"
+                    />
+                  </svg>
+                  RAG Chat
+                </h3>
+                <p
+                  class="md:w-2/3 mt-3 md:mt-0 text-gray-200 md:border-l md:border-gray-600 md:pl-12"
+                >
+                  Empower your teams by turning internal documentation, reports,
+                  and knowledge bases into an interactive chatbot. Get instant,
+                  cited answers to complex questions, drastically reducing
+                  research time and improving decision-making.
+                </p>
+              </div>
+              <!-- Use Case 2: Text Summarization -->
               <div class="md:flex md:items-start">
                 <h3
                   class="md:w-1/3 text-2xl font-semibold text-white flex-shrink-0 pr-12 flex items-center"
@@ -370,12 +456,11 @@
                   Ideal for researchers, analysts, and students who need to
                   quickly digest large volumes of text. Summarize academic
                   papers, financial reports, legal documents, and news articles
-                  to grasp key insights in a fraction of the time. This helps in
-                  accelerating research and making informed decisions faster.
+                  to grasp key insights in a fraction of the time.
                 </p>
               </div>
 
-              <!-- Use Case 2: Grammar Correction -->
+              <!-- Use Case 3: Grammar Correction -->
               <div class="md:flex md:items-start">
                 <h3
                   class="md:w-1/3 text-2xl font-semibold text-white flex-shrink-0 pr-12 flex items-center"
@@ -399,15 +484,13 @@
                 <p
                   class="md:w-2/3 mt-3 md:mt-0 text-gray-200 md:border-l md:border-gray-600 md:pl-12"
                 >
-                  Essential for professionals, marketers, and content creators.
-                  Ensure all your written communication—from emails and reports
-                  to marketing copy and blog posts—is polished, professional,
-                  and error-free. Maintain brand credibility and communicate
-                  with clarity and confidence.
+                  Essential for professionals and content creators. Ensure all
+                  your written communication—from emails to marketing copy—is
+                  polished, professional, and error-free.
                 </p>
               </div>
 
-              <!-- Use Case 3: Content Creation -->
+              <!-- Use Case 4: Content Creation -->
               <div class="md:flex md:items-start">
                 <h3
                   class="md:w-1/3 text-2xl font-semibold text-white flex-shrink-0 pr-12 flex items-center"
@@ -438,11 +521,10 @@
                 >
                   Perfect for marketers, bloggers, and businesses. Effortlessly
                   create engaging website content, social media posts, and email
-                  newsletters to attract and retain your audience. Save time on
-                  brainstorming and drafting.
+                  newsletters to attract and retain your audience.
                 </p>
               </div>
-              <!-- Use Case 4: Content Formatting -->
+              <!-- Use Case 5: Content Formatting -->
               <div class="md:flex md:items-start">
                 <h3
                   class="md:w-1/3 text-2xl font-semibold text-white flex-shrink-0 pr-12 flex items-center"
@@ -466,10 +548,9 @@
                 <p
                   class="md:w-2/3 mt-3 md:mt-0 text-gray-200 md:border-l md:border-gray-600 md:pl-12"
                 >
-                  Valuable for editors, web publishers, and corporate
-                  communicators. Automatically structure and style documents,
-                  reports, and web pages for a consistent, professional
-                  appearance, ensuring brand guidelines are met.
+                  Valuable for editors and web publishers. Automatically
+                  structure and style documents for a consistent, professional
+                  appearance.
                 </p>
               </div>
             </div>
