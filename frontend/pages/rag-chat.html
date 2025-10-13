@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RAG Document Chat</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    />
+    <style>
+      /* Custom scrollbar for better aesthetics */
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #555;
+      }
+      .truncate {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    </style>
+  </head>
+  <body class="bg-white text-gray-800">
+    <div class="flex h-screen overflow-hidden">
+      <!-- Collapsible Sidebar -->
+      <aside
+        id="sidebar"
+        class="w-64 bg-gray-50 border-r border-gray-200 flex flex-col flex-shrink-0 transition-all duration-300 ease-in-out overflow-hidden"
+      >
+        <!-- Sidebar Header -->
+        <div class="p-4 border-b border-gray-200">
+          <h2 class="font-semibold text-lg">Chat History</h2>
+        </div>
+        <!-- Chat List -->
+        <nav
+          id="chat-history-list"
+          class="flex-1 p-2 space-y-1 overflow-y-auto"
+        >
+          <!-- Chat history will be dynamically added here -->
+          <p class="text-center text-sm text-gray-500 mt-4">No recent chats.</p>
+        </nav>
+        <div class="p-4 border-t border-gray-200">
+          <button
+            id="new-chat-button"
+            class="w-full flex items-center justify-center px-3 py-2 text-sm font-medium text-gray-700 rounded-md hover:bg-gray-100"
+          >
+            <i class="fas fa-plus mr-2"></i> New Chat
+          </button>
+        </div>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="flex-1 flex flex-col">
+        <!-- Header -->
+        <header
+          class="p-4 border-b border-gray-200 flex items-center justify-between flex-shrink-0"
+        >
+          <!-- Sidebar Toggle -->
+          <button
+            id="sidebar-toggle"
+            class="text-gray-500 hover:text-gray-800"
+            title="Toggle Sidebar"
+          >
+            <i class="fas fa-bars fa-lg"></i>
+          </button>
+          <h1 class="text-xl font-semibold text-gray-800">RAG Document Chat</h1>
+          <button
+            id="reset-button"
+            class="text-gray-500 hover:text-gray-800"
+            title="Start New Chat"
+          >
+            <i class="fas fa-sync-alt"></i>
+          </button>
+        </header>
+
+        <!-- Upload View -->
+        <div
+          id="upload-view"
+          class="flex flex-col items-center justify-center flex-grow p-10 text-center"
+        >
+          <div
+            id="drop-zone"
+            class="w-full max-w-lg border-2 border-dashed border-gray-300 rounded-xl p-10 cursor-pointer hover:bg-gray-50 transition-colors"
+          >
+            <div class="flex flex-col items-center">
+              <i class="fas fa-cloud-upload-alt fa-3x text-gray-400 mb-4"></i>
+              <h2 class="text-lg font-semibold text-gray-600">
+                Drag & Drop Your Document Here
+              </h2>
+              <p class="text-sm text-gray-500 mt-1">
+                or click to select a file
+              </p>
+              <input type="file" id="file-upload-input" class="hidden" />
+            </div>
+          </div>
+          <p id="upload-status" class="mt-4 text-sm font-medium"></p>
+        </div>
+
+        <!-- Chat View -->
+        <div id="chat-view" class="hidden flex-col h-full">
+          <!-- Message Container -->
+          <div
+            id="message-container"
+            class="flex-1 p-6 space-y-4 overflow-y-auto"
+          >
+            <div id="chat-messages" class="space-y-4">
+              <!-- Chat messages will appear here -->
+            </div>
+          </div>
+          <!-- Input Area -->
+          <div class="p-4 border-t border-gray-200">
+            <form id="chat-form" class="flex items-center space-x-3">
+              <input
+                type="text"
+                id="chat-input"
+                placeholder="Ask a question about your document..."
+                class="flex-grow p-3 bg-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-black transition-all"
+                autocomplete="off"
+              />
+              <button
+                type="submit"
+                class="bg-black text-white rounded-full w-12 h-12 flex items-center justify-center hover:bg-gray-800 transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
+              >
+                <i class="fas fa-paper-plane"></i>
+              </button>
+            </form>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script>
+      // DOM Elements
+      const sidebar = document.getElementById("sidebar");
+      const sidebarToggle = document.getElementById("sidebar-toggle");
+      const newChatButton = document.getElementById("new-chat-button");
+      const chatHistoryList = document.getElementById("chat-history-list");
+      const uploadView = document.getElementById("upload-view");
+      const chatView = document.getElementById("chat-view");
+      const dropZone = document.getElementById("drop-zone");
+      const fileUploadInput = document.getElementById("file-upload-input");
+      const uploadStatus = document.getElementById("upload-status");
+      const chatForm = document.getElementById("chat-form");
+      const chatInput = document.getElementById("chat-input");
+      const messageContainer = document.getElementById("message-container");
+      const chatMessages = document.getElementById("chat-messages");
+      const resetButton = document.getElementById("reset-button");
+
+      // --- State Management ---
+      let chatSessions = {}; // Stores all chat data, keyed by a unique session ID
+      let currentChatId = null; // Tracks the currently active chat session
+
+      // --- Event Listeners ---
+
+      // Sidebar Toggle Listener
+      sidebarToggle.addEventListener("click", () => {
+        // Toggle the width of the sidebar to collapse/expand it
+        if (sidebar.classList.contains("w-64")) {
+          sidebar.classList.remove("w-64");
+          sidebar.classList.add("w-0");
+        } else {
+          sidebar.classList.remove("w-0");
+          sidebar.classList.add("w-64");
+        }
+      });
+
+      // New Chat button in sidebar and header reset button
+      newChatButton.addEventListener("click", resetToUploadView);
+      resetButton.addEventListener("click", resetToUploadView);
+
+      // Chat History List Click Listener for navigation
+      chatHistoryList.addEventListener("click", (e) => {
+        const chatItem = e.target.closest("a");
+        if (chatItem && chatItem.dataset.sessionId) {
+          e.preventDefault();
+          const sessionId = chatItem.dataset.sessionId;
+          if (sessionId !== currentChatId) {
+            switchToChat(sessionId);
+          }
+        }
+      });
+
+      // File Upload Listeners
+      dropZone.addEventListener("click", () => fileUploadInput.click());
+      dropZone.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        dropZone.classList.add("bg-gray-100", "border-blue-500");
+      });
+      dropZone.addEventListener("dragleave", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        dropZone.classList.remove("bg-gray-100", "border-blue-500");
+      });
+      dropZone.addEventListener("drop", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        dropZone.classList.remove("bg-gray-100", "border-blue-500");
+        const files = e.dataTransfer.files;
+        if (files.length) {
+          handleFileUpload(files[0]);
+        }
+      });
+      fileUploadInput.addEventListener("change", (e) => {
+        if (e.target.files.length) {
+          handleFileUpload(e.target.files[0]);
+        }
+      });
+
+      // Chat form submission
+      chatForm.addEventListener("submit", handleSendMessage);
+
+      // --- Core Functions ---
+
+      /**
+       * Handles the document upload, vectorization, and new session creation.
+       * @param {File} file The file to be uploaded.
+       */
+      async function handleFileUpload(file) {
+        if (!file) return;
+
+        uploadStatus.textContent = `Uploading ${file.name}...`;
+        uploadStatus.className = "mt-4 text-sm font-medium text-blue-600";
+
+        const formData = new FormData();
+        formData.append("files", file);
+
+        try {
+          // API call to upload and vectorize the document
+          const response = await fetch(
+            "http://127.0.0.1:8000/rag_model_upload/",
+            {
+              method: "POST",
+              body: formData,
+            }
+          );
+
+          if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(
+              errorData.detail || "File upload failed due to a server error."
+            );
+          }
+
+          const result = await response.json();
+          let documentId;
+
+          if (result && result.document_id) {
+            documentId = result.document_id;
+            console.log("Upload successful:", result);
+          } else {
+            console.warn(
+              "Upload was successful, but the server didn't return a document_id. Using a timestamp as a fallback ID."
+            );
+            documentId = `local-${Date.now()}`;
+          }
+
+          // Create a new session for this document
+          const sessionId = `chat-${Date.now()}`;
+          chatSessions[sessionId] = {
+            documentId: documentId,
+            documentName: file.name,
+            messages: [], // Start with an empty message history
+          };
+
+          addChatToHistory(file.name, sessionId);
+
+          uploadStatus.textContent = "Processing complete!";
+          uploadStatus.classList.remove("text-blue-600");
+          uploadStatus.classList.add("text-green-600");
+
+          setTimeout(() => {
+            switchToChat(sessionId); // Make the new chat active
+            const welcomeMessage = `Your document, <strong>${file.name}</strong>, has been successfully processed. You can now ask questions about its content.`;
+            addBotMessage(welcomeMessage); // This will save the message to the new session
+          }, 1200);
+        } catch (error) {
+          console.error("Upload error:", error);
+          let errorMessage = "An unexpected error occurred during upload.";
+          if (
+            error instanceof TypeError &&
+            error.message === "Failed to fetch"
+          ) {
+            errorMessage =
+              "Network Error: Could not connect to the server. Please ensure your FastAPI server is running at http://127.0.0.1:8000 and that Cross-Origin Resource Sharing (CORS) is enabled.";
+          } else {
+            errorMessage = error.message;
+          }
+          uploadStatus.textContent = `Error: ${errorMessage}`;
+          uploadStatus.classList.remove("text-blue-600", "text-green-600");
+          uploadStatus.classList.add("text-red-600");
+        }
+      }
+
+      /**
+       * Handles sending a user message to the active chat session and getting a response.
+       * @param {Event} e The form submission event.
+       */
+      async function handleSendMessage(e) {
+        e.preventDefault();
+        const userMessage = chatInput.value.trim();
+        const currentSession = chatSessions[currentChatId];
+
+        if (userMessage === "" || !currentSession) return;
+
+        addUserMessage(userMessage);
+        chatInput.value = "";
+
+        addTypingIndicator();
+
+        try {
+          // API call to get a chat response
+          const response = await fetch(
+            "http://127.0.0.1:8000/rag_model_chat/",
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                question: userMessage,
+                document_id: currentSession.documentId,
+              }),
+            }
+          );
+
+          if (!response.ok) {
+            throw new Error("Failed to get a response from the server.");
+          }
+
+          const data = await response.json();
+          removeTypingIndicator();
+          addBotMessage(data.answer);
+        } catch (error) {
+          console.error("Chat error:", error);
+          removeTypingIndicator();
+          let errorMessage =
+            "Sorry, I encountered an error trying to respond. Please try again.";
+          if (
+            error instanceof TypeError &&
+            error.message === "Failed to fetch"
+          ) {
+            errorMessage =
+              "Network Error: Could not get a response from the server. Please check your connection and the server status.";
+          }
+          addBotMessage(errorMessage);
+        }
+      }
+
+      // --- UI Helper Functions ---
+
+      /**
+       * Switches the main view to a specific chat session.
+       * @param {string} sessionId The ID of the session to switch to.
+       */
+      function switchToChat(sessionId) {
+        const session = chatSessions[sessionId];
+        if (!session) return;
+
+        currentChatId = sessionId;
+
+        // Clear previous messages and render messages from the selected session
+        chatMessages.innerHTML = "";
+        session.messages.forEach((msg) => {
+          if (msg.type === "user") {
+            addUserMessage(msg.text, false); // Don't save again
+          } else {
+            addBotMessage(msg.text, false); // Don't save again
+          }
+        });
+
+        // Switch to chat view and scroll to bottom
+        switchToChatView();
+        scrollToBottom();
+
+        // Update sidebar active state
+        document.querySelectorAll("#chat-history-list a").forEach((el) => {
+          el.classList.remove("bg-gray-200");
+          if (el.dataset.sessionId === sessionId) {
+            el.classList.add("bg-gray-200");
+          }
+        });
+      }
+
+      function switchToChatView() {
+        uploadView.classList.add("hidden");
+        chatView.classList.remove("hidden");
+        chatView.classList.add("flex");
+      }
+
+      function resetToUploadView() {
+        currentChatId = null; // De-select active chat
+        chatView.classList.add("hidden");
+        chatView.classList.remove("flex");
+        uploadView.classList.remove("hidden");
+        chatMessages.innerHTML = "";
+        uploadStatus.textContent = "";
+        uploadStatus.className = "mt-4 text-sm font-medium";
+        fileUploadInput.value = "";
+
+        // De-select active chat in history
+        const activeChatItem = chatHistoryList.querySelector(".bg-gray-200");
+        if (activeChatItem) {
+          activeChatItem.classList.remove("bg-gray-200");
+        }
+      }
+
+      /**
+       * Adds a new entry to the chat history sidebar.
+       * @param {string} documentName The name of the document.
+       * @param {string} sessionId The unique ID for this chat session.
+       */
+      function addChatToHistory(documentName, sessionId) {
+        // Remove the "No recent chats" message if it's there
+        const noChatsMessage = chatHistoryList.querySelector("p");
+        if (noChatsMessage) {
+          noChatsMessage.remove();
+        }
+
+        // Create the new history item
+        const newChatItem = document.createElement("a");
+        newChatItem.href = "#";
+        newChatItem.dataset.sessionId = sessionId;
+        newChatItem.className =
+          "flex items-center px-3 py-2 text-sm font-medium text-gray-700 rounded-md";
+        newChatItem.innerHTML = `
+                <i class="fas fa-file-alt mr-3 w-4 text-center"></i>
+                <span class="truncate">${documentName}</span>
+            `;
+
+        // Add the new item to the top of the list
+        chatHistoryList.prepend(newChatItem);
+      }
+
+      function addUserMessage(message, save = true) {
+        // Save the message to the current session's state if required
+        if (save && currentChatId && chatSessions[currentChatId]) {
+          chatSessions[currentChatId].messages.push({
+            type: "user",
+            text: message,
+          });
+        }
+
+        const messageElement = document.createElement("div");
+        messageElement.className = "flex justify-end";
+        messageElement.innerHTML = `
+                <div class="bg-black text-white rounded-2xl rounded-br-none max-w-md p-3">
+                    <p class="text-sm">${message}</p>
+                </div>
+            `;
+        chatMessages.appendChild(messageElement);
+        scrollToBottom();
+      }
+
+      function addBotMessage(message, save = true) {
+        // Save the message to the current session's state if required
+        if (save && currentChatId && chatSessions[currentChatId]) {
+          chatSessions[currentChatId].messages.push({
+            type: "bot",
+            text: message,
+          });
+        }
+
+        const messageElement = document.createElement("div");
+        messageElement.className = "flex justify-start";
+        messageElement.innerHTML = `
+                <div class="bg-gray-100 text-black rounded-2xl rounded-bl-none max-w-md p-3">
+                    <p class="text-sm">${message}</p>
+                </div>
+            `;
+        chatMessages.appendChild(messageElement);
+        scrollToBottom();
+      }
+
+      function addTypingIndicator() {
+        const typingElement = document.createElement("div");
+        typingElement.id = "typing-indicator";
+        typingElement.className = "flex justify-start";
+        typingElement.innerHTML = `
+                <div class="bg-gray-100 text-black rounded-2xl rounded-bl-none max-w-md p-3">
+                    <p class="text-sm flex items-center">
+                        <span class="animate-pulse">●</span>
+                        <span class="animate-pulse delay-75">●</span>
+                        <span class="animate-pulse delay-150">●</span>
+                    </p>
+                </div>
+            `;
+        chatMessages.appendChild(typingElement);
+        scrollToBottom();
+      }
+
+      function removeTypingIndicator() {
+        const typingIndicator = document.getElementById("typing-indicator");
+        if (typingIndicator) {
+          typingIndicator.remove();
+        }
+      }
+
+      function scrollToBottom() {
+        messageContainer.scrollTop = messageContainer.scrollHeight;
+      }
+    </script>
+  </body>
+</html>
