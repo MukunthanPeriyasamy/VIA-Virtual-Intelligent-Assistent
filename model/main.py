@@ -38,3 +38,4 @@ content_formatting_chain = content_formatting_system_prompt | llm
 def content_formatting_model(passage: str) -> str:
     response = content_formatting_chain.invoke({"content": passage})
     return response.content
+
