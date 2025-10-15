@@ -11,3 +11,7 @@ Unstructured
 faiss-cpu
 sentence-transformers
 docx2txt
+db-sqlite3
+passlib[bcrypt]
+python-jose
+jinja2
