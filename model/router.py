@@ -1,14 +1,16 @@
-from fastapi import FastAPI , Body ,  File, UploadFile , HTTPException, status
+from fastapi import FastAPI , Body ,  File, UploadFile , HTTPException, status , APIRouter
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from pathlib import Path
-from main import grammer_check_model , summarization_model , content_creation_model , content_formatting_model
-from rag_model import Rag_Chain
+from .main import grammer_check_model , summarization_model , content_creation_model , content_formatting_model
+from .rag_model import Rag_Chain
 from pydantic import BaseModel
-from vector_db import upload_document_vectorize
-from model import llm
+from .vector_db import upload_document_vectorize
+from .model import llm
 import shutil
 import os
+
+router = APIRouter()
 
 app = FastAPI()
 
@@ -22,7 +24,7 @@ app.add_middleware(
 
 from fastapi.staticfiles import StaticFiles
 
-app.mount("/frontend", StaticFiles(directory="../frontend"), name="frontend")
+app.mount("/frontend", StaticFiles(directory="frontend"), name="frontend")
 
 @app.get("/")
 def root():

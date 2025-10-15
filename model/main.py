@@ -1,5 +1,5 @@
-from model import llm
-from system_prompts import content_formatting_model_system_prompt, grammar_model_system_prompt , summarization_model_system_prompt , content_creation_model_system_prompt
+from .model import llm
+from .system_prompts import content_formatting_model_system_prompt, grammar_model_system_prompt , summarization_model_system_prompt , content_creation_model_system_prompt
 from langchain_core.prompts import ChatPromptTemplate
 
 

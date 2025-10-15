@@ -1,9 +1,8 @@
 from langchain_core.output_parsers import StrOutputParser
 from langchain.schema.runnable import RunnablePassthrough
 from langchain.prompts import PromptTemplate
-from vector_db import retriever
-from system_prompts import rag_model_system_prompt as system_prompt
-from model import llm
+from .vector_db import retriever
+from .system_prompts import rag_model_system_prompt as system_prompt
 
 
 #Intializing the Output Parser
