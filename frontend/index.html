@@ -148,18 +148,71 @@
                 class="text-gray-200 hover:bg-gray-800 hover:text-white px-3 py-2 rounded-md text-base font-medium"
                 >Use Cases</a
               >
-              <a
-                href="#"
-                class="text-base font-medium text-gray-200 hover:text-white"
-                >Log in</a
-              >
-              <a
-                href="#"
-                class="inline-flex items-center justify-center px-4 py-2 border border-transparent text-base font-medium rounded-md text-black bg-white hover:bg-gray-200"
-              >
-                Sign Up
-              </a>
             </div>
+            <!-- Mobile menu button -->
+            <button
+              id="mobile-menu-button"
+              class="md:hidden inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
+            >
+              <span class="sr-only">Open main menu</span>
+              <!--
+                Heroicon name: outline/bars-3
+                Icon for mobile menu button
+              -->
+              <svg
+                class="block h-6 w-6"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                aria-hidden="true"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M4 6h16M4 12h16M4 18h16"
+                />
+              </svg>
+              <!--
+                Heroicon name: outline/x-mark
+                
+                Icon for closing opened mobile menu
+              -->
+              <svg
+                class="hidden h-6 w-6"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                aria-hidden="true"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Mobile menu, show/hide based on mobile menu state. -->
+        <div id="mobile-menu" class="md:hidden hidden">
+          <div
+            class="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-black/80 backdrop-blur-sm"
+          >
+            <a
+              href="#services"
+              class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+              >Services</a
+            >
+            <a
+              href="#use-cases"
+              class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+              >Use Cases</a
+            >
           </div>
         </div>
       </header>
@@ -572,6 +625,23 @@
 
     <script>
       document.addEventListener("DOMContentLoaded", () => {
+        // Mobile menu toggle
+        const button = document.getElementById("mobile-menu-button");
+        const menu = document.getElementById("mobile-menu");
+
+        button.addEventListener("click", () => {
+          menu.classList.toggle("hidden");
+          const iconOpen = button.querySelector("svg:first-child");
+          const iconClose = button.querySelector("svg:last-child");
+          if (menu.classList.contains("hidden")) {
+            iconOpen.classList.remove("hidden");
+            iconClose.classList.add("hidden");
+          } else {
+            iconOpen.classList.add("hidden");
+            iconClose.classList.remove("hidden");
+          }
+        });
+
         // Smooth scroll-in animation observer
         const observer = new IntersectionObserver(
           (entries) => {
