@@ -180,6 +180,10 @@
       const chatMessages = document.getElementById("chat-messages");
       const resetButton = document.getElementById("reset-button");
 
+      const model_upload_url = "/rag_model_upload/";
+      const model_chat_url = "/rag_model_chat/";
+      const api_base_url = "/api";
+
       // --- State Management ---
       let chatSessions = {}; // Stores all chat data, keyed by a unique session ID
       let currentChatId = null; // Tracks the currently active chat session
@@ -291,7 +295,7 @@
         try {
           // API call to upload and vectorize the document
           const response = await fetch(
-            "http://127.0.0.1:8000/rag_model_upload/",
+            api_base_url + model_upload_url,
             {
               method: "POST",
               body: formData,
@@ -379,7 +383,7 @@
         try {
           // API call to get a chat response
           const response = await fetch(
-            "http://127.0.0.1:8000/rag_model_chat/",
+            api_base_url + model_chat_url,
             {
               method: "POST",
               headers: { "Content-Type": "application/json" },

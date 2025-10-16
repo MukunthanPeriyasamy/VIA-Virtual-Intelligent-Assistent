@@ -237,6 +237,9 @@ It is truly the one of the most amazing invention of modern century.`.trim();
       const outputElement = document.getElementById("output-text");
       const inputTextElement = document.getElementById("input-text");
 
+      const grammer_correction_url = "/grammer_correction";
+      const api_base_url = "/api";
+
       // Set default text
       inputTextElement.value = defaultPassage;
 
@@ -308,7 +311,7 @@ It is truly the one of the most amazing invention of modern century.`.trim();
 
         try {
           const response = await fetch(
-            "http://127.0.0.1:8000/grammer_correction",
+            api_base_url + grammer_correction_url,
             {
               method: "POST",
               headers: { "Content-Type": "application/json" },

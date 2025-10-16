@@ -205,6 +205,9 @@
       const outputElement = document.getElementById("output-text");
       const inputTextElement = document.getElementById("input-text");
 
+      const text_summarization_url = '/summarization'
+      const api_base_url = '/api'
+
       summarizeBtn.addEventListener("click", async () => {
         const inputText = inputTextElement.value;
 
@@ -221,7 +224,7 @@
         copyBtn.classList.add("hidden");
 
         try {
-          const response = await fetch("http://127.0.0.1:8000/summarization", {
+          const response = await fetch(api_base_url + text_summarization_url, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(inputText),

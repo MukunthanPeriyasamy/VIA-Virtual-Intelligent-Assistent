@@ -319,6 +319,8 @@
       const welcomeMessage = document.getElementById("welcome-message");
       const footerInput = document.getElementById("footer-input");
 
+      const content_creation_url = "/content_creation";
+      const api_base_url = "/api";
       // Move the input to be part of the welcome message initially for centering.
       welcomeMessage.appendChild(footerInput);
 
@@ -358,9 +360,8 @@
         );
 
         try {
-          const apiUrl = "http://127.0.0.1:8000/content_creation";
 
-          const response = await fetch(apiUrl, {
+          const response = await fetch(api_base_url + content_creation_url, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(inputText),

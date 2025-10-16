@@ -229,6 +229,9 @@
       const outputElement = document.getElementById("output-text");
       const inputTextElement = document.getElementById("input-text");
 
+      const content_formatting_url = "/content_formatting";
+      const api_base_url = "/api";
+
       // Set default example text
       inputTextElement.value = defaultPassage;
       inputTextElement.classList.add("default-text-style");
@@ -271,10 +274,9 @@
 
       // Function to call the Gemini API
       async function formatContentWithGemini(text) {
-        const apiUrl = "http://127.0.0.1:8000/content_formatting";
 
         try {
-          const response = await fetch(apiUrl, {
+          const response = await fetch(api_base_url + content_formatting_url, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(text),
