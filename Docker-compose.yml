@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  via-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: via-fastapi
+    ports:
+      - "8000:8000"
+    environment:
+      - PORT=8000
+      - WORKERS=4
+      - PYTHONUNBUFFERED=1
+    volumes:
+      # Mount frontend directory for static files
+      - ./frontend:/app/frontend:ro
+      # Mount for uploaded documents (persistent storage)
+      - ./uploads:/app/uploads
+      # Mount for vector database (if using local storage)
+      - ./vector_db:/app/vector_db
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Optional: PostgreSQL database
+  postgres:
+    image: postgres:15-alpine
+    container_name: via-postgres
+    environment:
+      POSTGRES_USER: viauser
+      POSTGRES_PASSWORD: viapassword
+      POSTGRES_DB: viadb
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
