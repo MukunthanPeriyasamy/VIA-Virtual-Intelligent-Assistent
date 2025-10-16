@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Grammar Correction - VIA</title>
+    <script src="https://cdn-tailwindcss.vercel.app/"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+      }
+      .fade-in {
+        animation: fadeIn 1s ease-out forwards;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .highlight {
+        background-color: rgba(255, 229, 100, 0.4);
+        padding: 0.1em 0.3em;
+        border-radius: 4px;
+        font-weight: 600;
+      }
+      #input-text.placeholder-text {
+        color: #9ca3af; /* gray-400 */
+      }
+      #input-text {
+        color: #111827; /* gray-900 */
+      }
+    </style>
+  </head>
+  <body class="bg-gray-50 text-gray-800">
+    <div class="min-h-screen flex flex-col">
+      <!-- Header -->
+      <header
+        class="w-full bg-white/80 backdrop-blur-sm sticky top-0 z-50 border-b border-gray-200"
+      >
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="flex items-center justify-between h-16">
+            <div class="flex flex-col items-start group">
+              <div class="text-3xl font-bold tracking-tight text-black">
+                VIA
+              </div>
+              <div class="text-xs text-gray-500 tracking-wide">
+                Virtual Intelligent Assistant
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Main Content -->
+      <main
+        class="flex-grow w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16"
+      >
+        <div class="fade-in text-center">
+          <h1
+            class="text-4xl sm:text-5xl font-bold text-gray-900 tracking-tight"
+          >
+            Grammar Correction Tool
+          </h1>
+          <p class="mt-4 text-lg text-gray-600">
+            Paste your text below to improve its clarity and correctness.
+          </p>
+        </div>
+
+        <!-- Input and Output Section -->
+        <div
+          class="mt-12 bg-white border border-gray-200 rounded-lg shadow-sm p-8 fade-in"
+          style="animation-delay: 0.2s"
+        >
+          <div class="grid md:grid-cols-2 md:gap-8">
+            <!-- Input Column -->
+            <div class="flex flex-col">
+              <label
+                for="input-text"
+                class="text-lg font-semibold text-gray-800"
+                >Original Text</label
+              >
+              <div class="relative mt-4 flex-grow">
+                <textarea
+                  id="input-text"
+                  style="height: 450px"
+                  class="w-full h-full p-4 pb-16 border border-gray-300 rounded-md focus:ring-2 focus:ring-black focus:border-black transition-shadow resize-none placeholder-text"
+                ></textarea>
+                <button
+                  id="clear-btn"
+                  class="absolute bottom-4 left-4 p-2.5 rounded-md group hidden"
+                  title="Clear text"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-5 w-5 text-gray-600 group-hover:text-black"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M6 18L18 6M6 6l12 12"
+                    ></path>
+                  </svg>
+                </button>
+              </div>
+            </div>
+
+            <!-- Output Column -->
+            <div
+              class="mt-8 md:mt-0 md:border-l md:border-gray-200 md:pl-8 flex flex-col"
+            >
+              <label
+                for="output-text"
+                class="text-lg font-semibold text-gray-800"
+                >Corrected Text</label
+              >
+              <div class="relative mt-4 flex-grow">
+                <div
+                  id="output-text"
+                  style="height: 450px"
+                  class="w-full h-full p-4 pb-16 bg-gray-50 border border-gray-300 rounded-md whitespace-pre-wrap overflow-y-auto"
+                >
+                  <span class="text-gray-400"
+                    >Your corrected text will appear here...</span
+                  >
+                </div>
+                <button
+                  id="copy-btn"
+                  class="absolute bottom-4 left-4 p-2.5 rounded-md group hidden"
+                  title="Copy to clipboard"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-5 w-5 text-gray-600 group-hover:text-black"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+                    ></path>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-8 flex justify-center">
+            <button
+              id="correct-btn"
+              class="px-8 py-3 text-base font-semibold rounded-md text-white bg-black hover:bg-gray-800 transition-colors disabled:bg-gray-400"
+            >
+              Correct Grammar
+            </button>
+          </div>
+        </div>
+      </main>
+    </div>
+    <script>
+      const defaultPassage =
+        `Machine learning is one of the most fastest growing technology in the world today.
+It help computer to learn from data without any human programing.
+The main aim of machine learning is to make system that can think by themself.
+In todays world, machine learning are used in many feilds like health, finance and education.
+There is three types of machine learning, supervised, unsupervised and reinforcement learning.
+Supervised learning means the model learn from the data which already having the correct answers.
+Unsupervised learning is when there is no label and computer try to find hidden pattern.
+Reinforcement learning is like a game where computer gets reward or punishment for actions.
+Machine learning algorithms are very usefull but sometimes they overfit the data.
+It is important to have good dataset because bad data give wrong results.
+Many peoples think machine learning is same as AI, but actually it is a part of AI only.
+We can see machine learning in apps like Netflix, Google and even in self driving cars.
+To train a model, we must split the data into train and testing set.
+Sometimes model give high accuracy but not work well in real world data.
+That is why evaluation is very important to know how good the model really are.
+Feature engineering also help to improve model but it take more time.
+There is also many ethical issue in machine learning like data bias and privacy.
+Scientists are working hard to make models more fair and explainable.
+Machine learning will continously change how human interact with technology.
+It is truly the one of the most amazing invention of modern century.`.trim();
+
+      function formatText(text) {
+        let formattedText = text.replace(
+          /\*\*(.*?)\*\*/g,
+          '<strong class="highlight">$1</strong>'
+        );
+        const lines = formattedText.split("\n");
+        let html = "";
+        let inList = false;
+
+        lines.forEach((line) => {
+          line = line.trim();
+          if (line.startsWith("* ")) {
+            if (!inList) {
+              html += '<ul class="list-disc list-inside space-y-2 my-4">';
+              inList = true;
+            }
+            html += `<li>${line.substring(2)}</li>`;
+          } else {
+            if (inList) {
+              html += "</ul>";
+              inList = false;
+            }
+            if (line) {
+              html += `<p class="mb-4">${line}</p>`;
+            }
+          }
+        });
+
+        if (inList) {
+          html += "</ul>";
+        }
+
+        return html;
+      }
+
+      const correctBtn = document.getElementById("correct-btn");
+      const copyBtn = document.getElementById("copy-btn");
+      const clearBtn = document.getElementById("clear-btn");
+      const outputElement = document.getElementById("output-text");
+      const inputTextElement = document.getElementById("input-text");
+
+      const grammer_correction_url = "/grammer_correction";
+      const api_base_url = "/api";
+
+      // Set default text
+      inputTextElement.value = defaultPassage;
+
+      const handleCopyButtonVisibility = () => {
+        const hasContent = outputElement.querySelector("p, ul, strong");
+        if (!hasContent) {
+          copyBtn.classList.add("hidden");
+          return;
+        }
+
+        const isScrollable =
+          outputElement.scrollHeight > outputElement.clientHeight;
+        const isAtBottom =
+          outputElement.scrollHeight - outputElement.scrollTop <=
+          outputElement.clientHeight + 5;
+
+        if (isScrollable) {
+          if (isAtBottom) {
+            copyBtn.classList.remove("hidden");
+          } else {
+            copyBtn.classList.add("hidden");
+          }
+        } else {
+          copyBtn.classList.remove("hidden");
+        }
+      };
+
+      const handleClearButtonVisibility = () => {
+        const hasContent = inputTextElement.value.trim() !== "";
+        if (!hasContent) {
+          clearBtn.classList.add("hidden");
+          return;
+        }
+
+        const isScrollable =
+          inputTextElement.scrollHeight > inputTextElement.clientHeight;
+        const isAtBottom =
+          inputTextElement.scrollHeight - inputTextElement.scrollTop <=
+          inputTextElement.clientHeight + 5;
+
+        if (isScrollable) {
+          if (isAtBottom) {
+            clearBtn.classList.remove("hidden");
+          } else {
+            clearBtn.classList.add("hidden");
+          }
+        } else {
+          clearBtn.classList.remove("hidden");
+        }
+      };
+
+      // Initial check
+      handleClearButtonVisibility();
+
+      correctBtn.addEventListener("click", async () => {
+        const inputText = inputTextElement.value;
+
+        if (inputText.trim() === "") {
+          outputElement.innerHTML =
+            '<span class="text-red-500">Please enter some text to correct.</span>';
+          return;
+        }
+
+        correctBtn.disabled = true;
+        correctBtn.textContent = "Correcting...";
+        outputElement.innerHTML =
+          '<span class="text-gray-500">Processing...</span>';
+        copyBtn.classList.add("hidden");
+
+        try {
+          const response = await fetch(
+            api_base_url + grammer_correction_url,
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(inputText),
+            }
+          );
+          if (!response.ok) throw new Error("API Error: " + response.status);
+          const data = await response.json();
+
+          if (data.corrected_text) {
+            outputElement.innerHTML = formatText(data.corrected_text);
+            handleCopyButtonVisibility();
+          } else {
+            outputElement.textContent = "No correction returned.";
+          }
+        } catch (error) {
+          outputElement.innerHTML = `<span class="text-red-500">Error: Could not connect to the AI server. This may be a CORS issue. If you are using FastAPI, please ensure CORS is enabled on your local server.</span>`;
+        } finally {
+          correctBtn.disabled = false;
+          correctBtn.textContent = "Correct Grammar";
+        }
+      });
+
+      outputElement.addEventListener("scroll", handleCopyButtonVisibility);
+      inputTextElement.addEventListener("scroll", handleClearButtonVisibility);
+      inputTextElement.addEventListener("input", handleClearButtonVisibility);
+
+      inputTextElement.addEventListener("focus", () => {
+        if (inputTextElement.value.trim() === defaultPassage) {
+          inputTextElement.value = "";
+          inputTextElement.classList.remove("placeholder-text");
+        }
+        handleClearButtonVisibility();
+      });
+
+      inputTextElement.addEventListener("blur", () => {
+        if (inputTextElement.value.trim() === "") {
+          inputTextElement.value = defaultPassage;
+          inputTextElement.classList.add("placeholder-text");
+        }
+        handleClearButtonVisibility();
+      });
+
+      clearBtn.addEventListener("click", () => {
+        inputTextElement.value = "";
+        inputTextElement.classList.remove("placeholder-text");
+        handleClearButtonVisibility();
+        inputTextElement.focus();
+      });
+
+      copyBtn.addEventListener("click", () => {
+        const textToCopy = outputElement.textContent;
+        const tempTextArea = document.createElement("textarea");
+        tempTextArea.value = textToCopy;
+        document.body.appendChild(tempTextArea);
+        tempTextArea.select();
+        document.execCommand("copy");
+        document.body.removeChild(tempTextArea);
+
+        const originalIcon = copyBtn.innerHTML;
+        copyBtn.innerHTML = `
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+            `;
+        setTimeout(() => {
+          copyBtn.innerHTML = originalIcon;
+        }, 2000);
+      });
+    </script>
+  </body>
+</html>

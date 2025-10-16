@@ -3,3 +3,15 @@ langchain-community
 langchain[groq]
 fastapi
 uvicorn[standard]
+langchain-huggingface
+python-multipart
+pyPDF
+Docx
+Unstructured
+faiss-cpu
+sentence-transformers
+docx2txt
+db-sqlite3
+passlib[bcrypt]
+python-jose
+jinja2

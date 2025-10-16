@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Text Summarization - VIA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+      }
+      .fade-in {
+        animation: fadeIn 1s ease-out forwards;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+    </style>
+  </head>
+  <body class="bg-gray-50 text-gray-800">
+    <div class="min-h-screen flex flex-col">
+      <!-- Header -->
+      <header
+        class="w-full bg-white/80 backdrop-blur-sm sticky top-0 z-50 border-b border-gray-200"
+      >
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="flex items-center justify-between h-16">
+            <div class="flex flex-col items-start group">
+              <!-- Professional VIA Logo -->
+              <svg
+                class="h-8 w-auto text-black"
+                viewBox="0 0 75 32"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <title>VIA Logo</title>
+                <text
+                  x="0"
+                  y="26"
+                  font-family="'Inter', sans-serif"
+                  font-size="32"
+                  font-weight="700"
+                  fill="currentColor"
+                >
+                  VIA
+                </text>
+              </svg>
+
+              <span
+                class="text-xs text-gray-500 mt-1 ml-0.5 tracking-wide group-hover:text-gray-600 transition-colors"
+                >Virtual Intelligent Assistant</span
+              >
+            </div>
+            
+      </header>
+
+      <!-- Main Content -->
+      <main
+        class="flex-grow w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16"
+      >
+        <div class="fade-in text-center">
+          <h1
+            class="text-4xl sm:text-5xl font-bold text-gray-900 tracking-tight"
+          >
+            Text Summarization Tool
+          </h1>
+          <p class="mt-4 text-lg text-gray-600">
+            Paste your text below to generate a concise and accurate summary.
+          </p>
+        </div>
+
+        <!-- Input and Output Section -->
+        <div
+          class="mt-12 bg-white border border-gray-200 rounded-lg shadow-sm p-8 fade-in"
+          style="animation-delay: 0.2s"
+        >
+          <div class="grid md:grid-cols-2 md:gap-8">
+            <!-- Input Column -->
+            <div class="flex flex-col">
+              <label
+                for="input-text"
+                class="text-lg font-semibold text-gray-800"
+                >Your Text</label
+              >
+              <div class="relative mt-4 flex-grow">
+                <textarea
+                  id="input-text"
+                  style="height: 450px"
+                  class="w-full h-full p-4 border border-gray-300 rounded-md focus:ring-2 focus:ring-black focus:border-black transition-shadow resize-none"
+                  placeholder="Enter or paste your document here..."
+                ></textarea>
+              </div>
+            </div>
+
+            <!-- Output Column -->
+            <div
+              class="mt-8 md:mt-0 md:border-l md:border-gray-200 md:pl-8 flex flex-col"
+            >
+              <label
+                for="output-text"
+                class="text-lg font-semibold text-gray-800"
+                >Summary</label
+              >
+              <div class="relative mt-4 flex-grow">
+                <div
+                  id="output-text"
+                  style="height: 450px"
+                  class="w-full h-full p-4 pb-16 bg-gray-50 border border-gray-300 rounded-md whitespace-pre-wrap overflow-y-auto"
+                >
+                  <span class="text-gray-400"
+                    >Your summarized text will appear here...</span
+                  >
+                </div>
+                <button
+                  id="copy-btn"
+                  class="absolute bottom-4 left-4 p-2.5 rounded-md group hidden"
+                  title="Copy to clipboard"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-5 w-5 text-gray-600 group-hover:text-black"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
+                    ></path>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-8 flex justify-center">
+            <button
+              id="summarize-btn"
+              class="px-8 py-3 text-base font-semibold rounded-md text-white bg-black hover:bg-gray-800 transition-colors disabled:bg-gray-400"
+            >
+              Summarize
+            </button>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script>
+      function formatSummary(text) {
+        // 1. Handle bold text: **text** -> <strong>text</strong>
+        let formattedText = text.replace(
+          /\*\*(.*?)\*\*/g,
+          "<strong>$1</strong>"
+        );
+
+        // 2. Handle bullet points and spacing
+        const lines = formattedText.split("\n");
+        let html = "";
+        let inList = false;
+
+        lines.forEach((line) => {
+          line = line.trim();
+          if (line.startsWith("* ")) {
+            if (!inList) {
+              html += '<ul class="list-disc list-inside space-y-2 my-4">';
+              inList = true;
+            }
+            html += `<li>${line.substring(2)}</li>`;
+          } else {
+            if (inList) {
+              html += "</ul>";
+              inList = false;
+            }
+            if (line) {
+              // Avoid creating empty paragraphs for blank lines
+              html += `<p class="mb-4">${line}</p>`;
+            }
+          }
+        });
+
+        if (inList) {
+          html += "</ul>"; // Close the list if it's the last element
+        }
+
+        return html;
+      }
+
+      const summarizeBtn = document.getElementById("summarize-btn");
+      const copyBtn = document.getElementById("copy-btn");
+      const outputElement = document.getElementById("output-text");
+      const inputTextElement = document.getElementById("input-text");
+
+      const text_summarization_url = '/summarization'
+      const api_base_url = '/api'
+
+      summarizeBtn.addEventListener("click", async () => {
+        const inputText = inputTextElement.value;
+
+        if (inputText.trim() === "") {
+          outputElement.innerHTML =
+            '<span class="text-red-500">Please enter some text to summarize.</span>';
+          return;
+        }
+
+        summarizeBtn.disabled = true;
+        summarizeBtn.textContent = "Summarizing...";
+        outputElement.innerHTML =
+          '<span class="text-gray-500">Processing...</span>';
+        copyBtn.classList.add("hidden");
+
+        try {
+          const response = await fetch(api_base_url + text_summarization_url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(inputText),
+          });
+          if (!response.ok) throw new Error("API Error: " + response.status);
+          const data = await response.json();
+
+          if (data.summary) {
+            outputElement.innerHTML = formatSummary(data.summary);
+            // Let the scroll handler manage the button visibility
+            handleScroll();
+          } else {
+            outputElement.textContent = "No summary returned.";
+          }
+        } catch (error) {
+          outputElement.innerHTML = `<span class="text-red-500">Error: Could not connect to the AI server.<br>${error}</span>`;
+        } finally {
+          summarizeBtn.disabled = false;
+          summarizeBtn.textContent = "Summarize";
+        }
+      });
+
+      const handleScroll = () => {
+        const isScrollable =
+          outputElement.scrollHeight > outputElement.clientHeight;
+        if (!isScrollable) {
+          copyBtn.classList.remove("hidden");
+          return;
+        }
+
+        const isAtBottom =
+          outputElement.scrollHeight - outputElement.scrollTop <=
+          outputElement.clientHeight + 5; // 5px threshold
+        if (isAtBottom) {
+          copyBtn.classList.remove("hidden");
+        } else {
+          copyBtn.classList.add("hidden");
+        }
+      };
+
+      outputElement.addEventListener("scroll", handleScroll);
+
+      copyBtn.addEventListener("click", () => {
+        const textToCopy = outputElement.textContent;
+        const tempTextArea = document.createElement("textarea");
+        tempTextArea.value = textToCopy;
+        document.body.appendChild(tempTextArea);
+        tempTextArea.select();
+        document.execCommand("copy");
+        document.body.removeChild(tempTextArea);
+
+        const originalIcon = copyBtn.innerHTML;
+        copyBtn.innerHTML = `
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+            </svg>
+        `;
+        setTimeout(() => {
+          copyBtn.innerHTML = originalIcon;
+        }, 2000);
+      });
+    </script>
+  </body>
+</html>

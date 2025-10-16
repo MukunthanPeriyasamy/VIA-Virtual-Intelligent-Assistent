@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VIA - Virtual Intelligent Assistant</title>
+    <!-- Corrected Tailwind CSS CDN link -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Vanta.js dependencies -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.fog.min.js"></script>
+    <style>
+      html {
+        scroll-behavior: smooth;
+        font-size: 15px;
+      }
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: #000;
+      }
+      .page-content {
+        animation: fadeInPage 1.2s ease-out forwards;
+      }
+      @keyframes fadeInPage {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+      .service-card {
+        background: rgba(255, 255, 255, 0.05); /* White with transparency */
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1); /* Lighter border for contrast */
+        transition: border-color 0.3s ease-in-out, transform 0.3s ease-in-out,
+          box-shadow 0.3s ease-in-out;
+      }
+      .service-card:hover {
+        border-color: rgba(
+          255,
+          255,
+          255,
+          0.5
+        ); /* More visible border on hover */
+        transform: translateY(-4px);
+      }
+      .main-service-card {
+        background: rgba(167, 139, 250, 0.1); /* A subtle violet tint */
+        border: 1px solid rgba(139, 92, 246, 0.5);
+        box-shadow: 0 0 25px rgba(139, 92, 246, 0.2);
+      }
+      .main-service-card:hover {
+        border-color: rgba(139, 92, 246, 1);
+        transform: translateY(-5px) scale(1.02);
+        box-shadow: 0 0 35px rgba(139, 92, 246, 0.3);
+      }
+      .service-icon-bg {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(5px);
+      }
+      .smooth-load {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+      }
+      .smooth-load.is-visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      /* Ensure Vanta canvas is in the background */
+      .vanta-canvas {
+        z-index: 0 !important;
+      }
+    </style>
+  </head>
+  <body class="text-gray-200">
+    <!-- Vanta.js animated background container -->
+    <div id="vanta-container" class="fixed top-0 left-0 w-full h-full"></div>
+
+    <!-- App Container -->
+    <div class="relative z-10 min-h-screen flex flex-col page-content">
+      <!-- Header -->
+      <header
+        class="w-full bg-black/80 backdrop-blur-sm sticky top-0 z-50 border-b border-gray-900"
+      >
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="flex items-center justify-between h-16">
+            <div class="flex flex-col items-start group">
+              <!-- Professional VIA Logo --><svg
+                class="h-7 w-auto"
+                viewBox="0 0 90 32"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <title>VIA Logo</title>
+                <text
+                  font-family="'Inter', sans-serif"
+                  x="0"
+                  y="26"
+                  font-weight="700"
+                  font-size="32"
+                  fill="white"
+                >
+                  V
+                </text>
+                <text
+                  font-family="'Inter', sans-serif"
+                  x="28"
+                  y="26"
+                  font-weight="700"
+                  font-size="32"
+                  fill="white"
+                >
+                  I
+                </text>
+                <text
+                  font-family="'Inter', sans-serif"
+                  x="44"
+                  y="26"
+                  font-weight="700"
+                  font-size="32"
+                  fill="white"
+                >
+                  A
+                </text>
+                <!-- Removed the circle element, which was the "dot" -->
+              </svg>
+              <span
+                class="text-xs text-gray-400 mt-1 ml-0.5 tracking-wide group-hover:text-gray-300 transition-colors"
+                >Virtual Intelligent Assistant</span
+              >
+            </div>
+            <div class="hidden md:flex items-center space-x-6">
+              <a
+                href="#services"
+                class="text-gray-200 hover:bg-gray-800 hover:text-white px-3 py-2 rounded-md text-base font-medium"
+                >Services</a
+              >
+              <a
+                href="#use-cases"
+                class="text-gray-200 hover:bg-gray-800 hover:text-white px-3 py-2 rounded-md text-base font-medium"
+                >Use Cases</a
+              >
+            </div>
+            <!-- Mobile menu button -->
+            <button
+              id="mobile-menu-button"
+              class="md:hidden inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
+            >
+              <span class="sr-only">Open main menu</span>
+              <!--
+                Heroicon name: outline/bars-3
+                Icon for mobile menu button
+              -->
+              <svg
+                class="block h-6 w-6"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                aria-hidden="true"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M4 6h16M4 12h16M4 18h16"
+                />
+              </svg>
+              <!--
+                Heroicon name: outline/x-mark
+                
+                Icon for closing opened mobile menu
+              -->
+              <svg
+                class="hidden h-6 w-6"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                aria-hidden="true"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Mobile menu, show/hide based on mobile menu state. -->
+        <div id="mobile-menu" class="md:hidden hidden">
+          <div
+            class="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-black/80 backdrop-blur-sm"
+          >
+            <a
+              href="#services"
+              class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+              >Services</a
+            >
+            <a
+              href="#use-cases"
+              class="text-gray-300 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+              >Use Cases</a
+            >
+          </div>
+        </div>
+      </header>
+
+      <!-- Main Content -->
+      <main class="flex-grow">
+        <!-- Hero Section -->
+        <div class="pt-20 pb-12 sm:pt-28 sm:pb-16 text-center smooth-load">
+          <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h1
+              class="text-4xl sm:text-5xl lg:text-6xl font-bold text-white tracking-tight"
+            >
+              Empower Your Workflow with Advanced AI
+            </h1>
+            <p class="mt-6 text-lg max-w-2xl mx-auto text-gray-200">
+              A suite of powerful, reliable, and easy-to-integrate AI services
+              designed for professional applications. From text analysis to
+              content generation, we provide the tools you need to innovate.
+            </p>
+            <div class="mt-10 flex justify-center">
+              <a
+                href="#services"
+                class="px-6 py-3 text-sm font-semibold rounded-md text-black bg-white hover:bg-gray-200"
+                >Explore Services</a
+              >
+            </div>
+          </div>
+        </div>
+
+        <!-- Services Section -->
+        <div id="services" class="pt-12 sm:pt-16 pb-20 sm:pb-24 smooth-load">
+          <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center">
+              <h2
+                class="text-3xl font-bold tracking-tight text-white sm:text-4xl"
+              >
+                A Tool for Every Task
+              </h2>
+              <p class="mt-4 text-lg text-gray-300">
+                Select an AI service below to get started.
+              </p>
+            </div>
+
+            <div class="mt-16 max-w-3xl mx-auto">
+              <!-- Main Service Card: RAG Chat -->
+              <a
+                class="service-card main-service-card p-8 rounded-lg cursor-pointer block"
+                href="frontend/pages/rag-chat.html"
+              >
+                <div class="flex items-center">
+                  <div class="p-3 rounded-md service-icon-bg">
+                    <svg
+                      class="h-8 w-8 text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke-width="1.5"
+                      stroke="currentColor"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M2.25 12.76c0 1.6 1.123 2.994 2.707 3.227 1.087.16 2.185.283 3.293.369V21l4.076-4.076a1.526 1.526 0 011.037-.443 48.282 48.282 0 005.68-.494c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z"
+                      />
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M15.75 10.5l-2.063 2.063m0 0l-2.063-2.063m2.063 2.063V7.5"
+                      />
+                    </svg>
+                  </div>
+                  <h3 class="ml-4 text-2xl font-semibold text-white">
+                    RAG Chat
+                  </h3>
+                </div>
+                <p class="mt-4 text-gray-200 text-lg">
+                  Our flagship service. Engage in intelligent conversations with
+                  your documents and data. Get instant, accurate answers backed
+                  by your own knowledge base.
+                </p>
+              </a>
+            </div>
+
+            <div
+              class="mt-16 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4"
+            >
+              <!-- Service Card 1: Summarization --><a
+                class="service-card p-8 rounded-lg cursor-pointer"
+                href="frontend/pages/text_summarization.html"
+              >
+                <div class="flex items-center">
+                  <div class="p-3 rounded-md service-icon-bg">
+                    <svg
+                      class="h-6 w-6 text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke-width="1.5"
+                      stroke="currentColor"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25H12"
+                      />
+                    </svg>
+                  </div>
+                  <h3 class="ml-4 text-xl font-semibold text-white">
+                    Text Summarization
+                  </h3>
+                </div>
+                <p class="mt-4 text-gray-200">
+                  Condense long documents, articles, or reports into concise,
+                  easy-to-read summaries.
+                </p>
+              </a>
+
+              <!-- Service Card 2: Grammar Correction --><a
+                class="service-card p-8 rounded-lg cursor-pointer"
+                href="frontend/pages/grammar_correction.html"
+              >
+                <div class="flex items-center">
+                  <div class="p-3 rounded-md service-icon-bg">
+                    <svg
+                      class="h-6 w-6 text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke-width="1.5"
+                      stroke="currentColor"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M4.5 12.75l6 6 9-13.5"
+                      />
+                    </svg>
+                  </div>
+                  <h3 class="ml-4 text-xl font-semibold text-white">
+                    Grammar Correction
+                  </h3>
+                </div>
+                <p class="mt-4 text-gray-200">
+                  Improve the clarity and professionalism of your writing by
+                  correcting errors.
+                </p>
+              </a>
+
+              <!-- Service Card 3: Content Creation --><a
+                class="service-card p-8 rounded-lg cursor-pointer"
+                href="frontend/pages/content_creation.html"
+              >
+                <div class="flex items-center">
+                  <div class="p-3 rounded-md service-icon-bg">
+                    <svg
+                      class="h-6 w-6 text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke-width="1.5"
+                      stroke="currentColor"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 19.5a2.25 2.25 0 01-1.012.548l-3.359 1.01-1.01-3.359a2.25 2.25 0 01.548-1.012l9.059-9.059z"
+                      />
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M12.75 3.75l-4.125 4.125"
+                      />
+                    </svg>
+                  </div>
+                  <h3 class="ml-4 text-xl font-semibold text-white">
+                    Content Creation
+                  </h3>
+                </div>
+                <p class="mt-4 text-gray-200">
+                  Generate high-quality articles, blog posts, and marketing copy
+                  on any topic.
+                </p>
+              </a>
+              <!-- Service Card 4: Content Formatting --><a
+                class="service-card p-8 rounded-lg cursor-pointer"
+                href="frontend/pages/content_formatting.html"
+              >
+                <div class="flex items-center">
+                  <div class="p-3 rounded-md service-icon-bg">
+                    <svg
+                      class="h-6 w-6 text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke-width="1.5"
+                      stroke="currentColor"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
+                      />
+                    </svg>
+                  </div>
+                  <h3 class="ml-4 text-xl font-semibold text-white">
+                    Content Formatting
+                  </h3>
+                </div>
+                <p class="mt-4 text-gray-200">
+                  Automatically format your text to improve readability and
+                  visual appeal.
+                </p>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Use Cases Section -->
+        <div id="use-cases" class="py-20 sm:py-24 smooth-load">
+          <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto">
+              <h2
+                class="text-3xl font-bold tracking-tight text-white sm:text-4xl"
+              >
+                Practical Applications for VIA Tools
+              </h2>
+              <p class="mt-4 text-lg text-gray-300">
+                Discover how our AI-powered services can be applied across
+                various professional fields to enhance productivity, streamline
+                workflows, and drive innovation.
+              </p>
+            </div>
+
+            <div class="mt-16 max-w-5xl mx-auto space-y-16">
+              <!-- Use Case 1: RAG Chat -->
+              <div class="md:flex md:items-start">
+                <h3
+                  class="md:w-1/3 text-2xl font-semibold text-white flex-shrink-0 pr-12 flex items-center"
+                >
+                  <svg
+                    class="h-6 w-6 text-white mr-3"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M2.25 12.76c0 1.6 1.123 2.994 2.707 3.227 1.087.16 2.185.283 3.293.369V21l4.076-4.076a1.526 1.526 0 011.037-.443 48.282 48.282 0 005.68-.494c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z"
+                    />
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M15.75 10.5l-2.063 2.063m0 0l-2.063-2.063m2.063 2.063V7.5"
+                    />
+                  </svg>
+                  RAG Chat
+                </h3>
+                <p
+                  class="md:w-2/3 mt-3 md:mt-0 text-gray-200 md:border-l md:border-gray-600 md:pl-12"
+                >
+                  Empower your teams by turning internal documentation, reports,
+                  and knowledge bases into an interactive chatbot. Get instant,
+                  cited answers to complex questions, drastically reducing
+                  research time and improving decision-making.
+                </p>
+              </div>
+              <!-- Use Case 2: Text Summarization -->
+              <div class="md:flex md:items-start">
+                <h3
+                  class="md:w-1/3 text-2xl font-semibold text-white flex-shrink-0 pr-12 flex items-center"
+                >
+                  <svg
+                    class="h-6 w-6 text-white mr-3"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25H12"
+                    />
+                  </svg>
+                  Text Summarization
+                </h3>
+                <p
+                  class="md:w-2/3 mt-3 md:mt-0 text-gray-200 md:border-l md:border-gray-600 md:pl-12"
+                >
+                  Ideal for researchers, analysts, and students who need to
+                  quickly digest large volumes of text. Summarize academic
+                  papers, financial reports, legal documents, and news articles
+                  to grasp key insights in a fraction of the time.
+                </p>
+              </div>
+
+              <!-- Use Case 3: Grammar Correction -->
+              <div class="md:flex md:items-start">
+                <h3
+                  class="md:w-1/3 text-2xl font-semibold text-white flex-shrink-0 pr-12 flex items-center"
+                >
+                  <svg
+                    class="h-6 w-6 text-white mr-3"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M4.5 12.75l6 6 9-13.5"
+                    />
+                  </svg>
+                  Grammar Correction
+                </h3>
+                <p
+                  class="md:w-2/3 mt-3 md:mt-0 text-gray-200 md:border-l md:border-gray-600 md:pl-12"
+                >
+                  Essential for professionals and content creators. Ensure all
+                  your written communication—from emails to marketing copy—is
+                  polished, professional, and error-free.
+                </p>
+              </div>
+
+              <!-- Use Case 4: Content Creation -->
+              <div class="md:flex md:items-start">
+                <h3
+                  class="md:w-1/3 text-2xl font-semibold text-white flex-shrink-0 pr-12 flex items-center"
+                >
+                  <svg
+                    class="h-6 w-6 text-white mr-3"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 19.5a2.25 2.25 0 01-1.012.548l-3.359 1.01-1.01-3.359a2.25 2.25 0 01.548-1.012l9.059-9.059z"
+                    />
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M12.75 3.75l-4.125 4.125"
+                    />
+                  </svg>
+                  Content Creation
+                </h3>
+                <p
+                  class="md:w-2/3 mt-3 md:mt-0 text-gray-200 md:border-l md:border-gray-600 md:pl-12"
+                >
+                  Perfect for marketers, bloggers, and businesses. Effortlessly
+                  create engaging website content, social media posts, and email
+                  newsletters to attract and retain your audience.
+                </p>
+              </div>
+              <!-- Use Case 5: Content Formatting -->
+              <div class="md:flex md:items-start">
+                <h3
+                  class="md:w-1/3 text-2xl font-semibold text-white flex-shrink-0 pr-12 flex items-center"
+                >
+                  <svg
+                    class="h-6 w-6 text-white mr-3"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
+                    />
+                  </svg>
+                  Content Formatting
+                </h3>
+                <p
+                  class="md:w-2/3 mt-3 md:mt-0 text-gray-200 md:border-l md:border-gray-600 md:pl-12"
+                >
+                  Valuable for editors and web publishers. Automatically
+                  structure and style documents for a consistent, professional
+                  appearance.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <!-- Footer -->
+      <footer class="bg-black/80 border-t border-gray-900">
+        <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+          <div class="text-center">
+            <p class="text-base text-gray-300">
+              &copy; 2025 VIA. All rights reserved.
+            </p>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        // Mobile menu toggle
+        const button = document.getElementById("mobile-menu-button");
+        const menu = document.getElementById("mobile-menu");
+
+        button.addEventListener("click", () => {
+          menu.classList.toggle("hidden");
+          const iconOpen = button.querySelector("svg:first-child");
+          const iconClose = button.querySelector("svg:last-child");
+          if (menu.classList.contains("hidden")) {
+            iconOpen.classList.remove("hidden");
+            iconClose.classList.add("hidden");
+          } else {
+            iconOpen.classList.add("hidden");
+            iconClose.classList.remove("hidden");
+          }
+        });
+
+        // Smooth scroll-in animation observer
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add("is-visible");
+                observer.unobserve(entry.target);
+              }
+            });
+          },
+          {
+            threshold: 0.1,
+          }
+        );
+
+        const elements = document.querySelectorAll(".smooth-load");
+        elements.forEach((el) => observer.observe(el));
+
+        // Vanta.js Fog Animation
+        VANTA.FOG({
+          el: "#vanta-container",
+          mouseControls: true,
+          touchControls: true,
+          gyroControls: false,
+          minHeight: 200.0,
+          minWidth: 200.0,
+          highlightColor: 0x0,
+          midtoneColor: 0x0,
+          lowlightColor: 0xffffff,
+          baseColor: 0x0,
+          blurFactor: 0.73,
+          speed: 1.0,
+          zoom: 1.0,
+        });
+      });
+    </script>
+  </body>
+</html>
