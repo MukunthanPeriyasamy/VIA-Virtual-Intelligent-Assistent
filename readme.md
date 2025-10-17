@@ -5,6 +5,9 @@
 <div align="center">
   <h3>Advanced AI Tools for Summarization, Correction, Formatting & RAG-based Chat</h3>
 </div>
+<img width="1627" height="900" alt="image" src="https://github.com/user-attachments/assets/f8f0cbc9-e9e1-40aa-86ba-20fef30ba74d" />
+<img width="1642" height="695" alt="image" src="https://github.com/user-attachments/assets/7c5f2958-2ea0-4ae8-9218-3defcb287992" />
+
 
 ***
 
@@ -100,4 +103,5 @@ uvicorn main:app --reload
 **Cutting-edge LLM AI Tools. Lightning Fast. Modular. All Yours.**
 
 ***
+
 
