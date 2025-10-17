@@ -100,4 +100,4 @@ uvicorn main:app --reload
 **Cutting-edge LLM AI Tools. Lightning Fast. Modular. All Yours.**
 
 ***
-[22](https://lobechat.com/discover/model/llama-3.3-70b-versatile)
+
