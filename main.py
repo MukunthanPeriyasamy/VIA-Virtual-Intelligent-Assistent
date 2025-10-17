@@ -30,7 +30,7 @@ app.include_router(router, prefix="/api", tags=["AI Services"])
 # Root endpoint - serve frontend
 @app.get("/")
 def root():
-    return FileResponse(Path(__file__).parent.parent / "frontend" / "index.html")
+    return FileResponse(Path(__file__).parent / "frontend" / "index.html")
 
 # Health check endpoint
 @app.get("/health")
